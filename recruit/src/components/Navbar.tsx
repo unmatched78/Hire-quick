@@ -12,6 +12,8 @@ import {
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
+import { useAuthStore } from '@/stores/auth';
+import { toast } from 'sonner';
 
 const GlowingNavbar = styled(NextUINavbar)`
   background: rgba(255, 255, 255, 0.95);
@@ -25,17 +27,21 @@ const GlowingNavbar = styled(NextUINavbar)`
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
+  const { isAuthenticated, clearAuth } = useAuthStore();
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };
 
+  const handleLogout = () => {
+    clearAuth();
+    toast.success(t('logout_success'));
+  };
+
   const menuItems = [
     { path: '/', label: 'nav_home' },
     { path: '/jobs', label: 'nav_jobs' },
-    { path: '/employers', label: 'nav_employers' },
-    { path: '/about', label: 'nav_about' },
-    { path: '/contact', label: 'nav_contact' },
+    ...(isAuthenticated ? [{ path: '/dashboard', label: 'nav_dashboard' }] : []),
   ];
 
   return (
@@ -90,6 +96,37 @@ const Navbar = () => {
           >
             Kinyarwanda
           </Button>
+          {isAuthenticated ? (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-24 text-gray-900 border-blue-500 hover:bg-blue-500/10 glow-on-hover"
+              onClick={handleLogout}
+            >
+              {t('logout')}
+            </Button>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-24 text-gray-900 border-blue-500 hover:bg-blue-500/10 glow-on-hover"
+                >
+                  {t('login')}
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-24 text-gray-900 border-blue-500 hover:bg-blue-500/10 glow-on-hover"
+                >
+                  {t('register')}
+                </Button>
+              </Link>
+            </>
+          )}
         </motion.div>
       </NavbarContent>
       <NavbarMenuToggle className="sm:hidden text-gray-900" />
