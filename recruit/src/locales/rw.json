@@ -1,0 +1,11 @@
+// rw.json
+{
+  "login_title": "Injira",
+  "username": "Izina ry'ukoresha",
+  "password": "Ijambobanga",
+  "login_button": "Injira",
+  "login_success": "Winjiye neza!",
+  "login_failed": "Kwinjira byanze. Reba neza amakuru yawe.",
+  "jobs_fetch_error": "Kubika imirimo byanze.",
+  "loading_jobs": "Imirimo irimo kubikwa..."
+}

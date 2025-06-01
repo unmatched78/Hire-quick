@@ -1,0 +1,11 @@
+// en.json
+{
+  "login_title": "Login",
+  "username": "Username",
+  "password": "Password",
+  "login_button": "Login",
+  "login_success": "Logged in successfully!",
+  "login_failed": "Login failed. Please check your credentials.",
+  "jobs_fetch_error": "Failed to load jobs.",
+  "loading_jobs": "Loading jobs..."
+}
