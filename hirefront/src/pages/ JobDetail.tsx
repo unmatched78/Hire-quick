@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Heading, Text, Button, VStack, Icon, Spinner, Flex } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { BriefcaseIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
 
-const MotionBox = motion(Box);
-const MotionButton = motion(Button);
+const MotionDiv = motion.div;
 
 interface Job {
   id: number;
@@ -21,7 +19,7 @@ interface Job {
 }
 
 const JobDetail = () => {
-  const { id } = useParams<{ id: string }>(); // Get job ID from URL
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,53 +40,43 @@ const JobDetail = () => {
   }, [id]);
 
   const handleApply = () => {
-    // Placeholder for apply logic (e.g., redirect to application form or API call)
-    navigate('/apply'); // Update with actual application route
+    navigate('/apply');
   };
 
-  if (loading) return <Spinner size="xl" color="brand.500" />;
-  if (error) return <Text color="red.500">{error}</Text>;
+  if (loading) return <div className="text-center text-brand-500">Loading...</div>;
+  if (error) return <div className="text-center text-red-500">{error}</div>;
 
   return (
-    <MotionBox
+    <MotionDiv
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      p={8}
-      maxW="3xl"
-      mx="auto"
-      mt={10}
-      bg="gray.800"
-      rounded="lg"
-      shadow="lg"
-      className="glow"
+      className="mx-auto mt-10 max-w-3xl rounded-lg bg-gray-800 p-8 shadow-lg glow"
     >
-      <VStack spacing={6} align="start">
-        <Heading size="2xl" bgGradient="linear(to-r, brand.500, brand.600)" bgClip="text">
+      <div className="space-y-6">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
           {job?.title}
-        </Heading>
-        <Flex align="center">
-          <Icon as={BriefcaseIcon} w={6} h={6} color="brand.500" mr={2} />
-          <Text fontSize="lg" fontWeight="bold">{job?.posted_by.name}</Text>
-        </Flex>
-        <Text><strong>Location:</strong> {job?.location}</Text>
-        <Text><strong>Job Type:</strong> {job?.job_type}</Text>
+        </h2>
+        <div className="flex items-center">
+          <BriefcaseIcon className="w-6 h-6 text-brand-500 mr-2" />
+          <span className="text-lg font-bold text-white">{job?.posted_by.name}</span>
+        </div>
+        <p className="text-white"><strong>Location:</strong> {job?.location}</p>
+        <p className="text-white"><strong>Job Type:</strong> {job?.job_type}</p>
         {(job?.salary_min || job?.salary_max) && (
-          <Text>
+          <p className="text-white">
             <strong>Salary:</strong> ${job?.salary_min?.toLocaleString()} - ${job?.salary_max?.toLocaleString()}
-          </Text>
+          </p>
         )}
-        <Text><strong>Posted:</strong> {new Date(job?.date_posted || '').toLocaleDateString()}</Text>
-        <Text><strong>Description:</strong> {job?.description}</Text>
-        <MotionButton
-          colorScheme="brand"
-          size="lg"
-          whileHover={{ scale: 1.1 }}
+        <p className="text-white"><strong>Posted:</strong> {new Date(job?.date_posted || '').toLocaleDateString()}</p>
+        <p className="text-white"><strong>Description:</strong> {job?.description}</p>
+        <button
           onClick={handleApply}
+          className="rounded-md bg-brand-500 px-6 py-3 text-white hover:bg-brand-600"
         >
           Apply Now
-        </MotionButton>
-      </VStack>
-    </MotionBox>
+        </button>
+      </div>
+    </MotionDiv>
   );
 };
 
