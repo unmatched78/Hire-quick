@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_framework',  # Add Django Rest Framework
     'core',            # Add your app (e.g., 'core')
-    'corsheader'
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
