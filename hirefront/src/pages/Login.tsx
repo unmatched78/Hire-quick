@@ -1,11 +1,10 @@
-import { Box, Heading, VStack, Button, Input, FormLabel, FormErrorMessage } from '@chakra-ui/react';
-import { FormControl } from '@chakra-ui/form-control'; // Correct import
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import * as Form from '@radix-ui/react-form';
 
-const MotionBox = motion(Box);
+const MotionDiv = motion.div;
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -36,57 +35,51 @@ const Login = () => {
   };
 
   return (
-    <MotionBox
+    <MotionDiv
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      p={8}
-      maxW="md"
-      mx="auto"
-      mt={10}
-      bg="gray.800"
-      rounded="lg"
-      shadow="lg"
-      className="glow"
+      className="mx-auto mt-10 max-w-md rounded-lg bg-gray-800 p-8 shadow-lg glow"
     >
-      <VStack spacing={4}>
-        <Heading>Login</Heading>
-        <FormControl isInvalid={!!errors.username}>
-          <FormLabel>Username</FormLabel>
-          <Input
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            placeholder="Username"
-            bg="gray.700"
-            borderColor="gray.600"
-            _focus={{ borderColor: 'brand.500', boxShadow: '0 0 0 1px #7928CA' }}
-          />
-          <FormErrorMessage>{errors.username}</FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={!!errors.password}>
-          <FormLabel>Password</FormLabel>
-          <Input
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Password"
-            bg="gray.700"
-            borderColor="gray.600"
-            _focus={{ borderColor: 'brand.500', boxShadow: '0 0 0 1px #7928CA' }}
-          />
-          <FormErrorMessage>{errors.password}</FormErrorMessage>
-        </FormControl>
-        <Button
-          colorScheme="brand"
-          mt={4}
-          onClick={handleSubmit}
-          _hover={{ bg: 'brand.600' }}
-        >
-          Login
-        </Button>
-      </VStack>
-    </MotionBox>
+      <Form.Root>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-white">Login</h2>
+          <Form.Field name="username" className="space-y-1">
+            <Form.Label className="text-white">Username</Form.Label>
+            <Form.Control asChild>
+              <input
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Username"
+                className="w-full rounded-md border border-gray-600 bg-gray-700 p-2 text-white focus:border-brand-500 focus:ring focus:ring-brand-500 focus:ring-opacity-50"
+              />
+            </Form.Control>
+            {errors.username && <Form.Message className="text-red-500">{errors.username}</Form.Message>}
+          </Form.Field>
+          <Form.Field name="password" className="space-y-1">
+            <Form.Label className="text-white">Password</Form.Label>
+            <Form.Control asChild>
+              <input
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password"
+                className="w-full rounded-md border border-gray-600 bg-gray-700 p-2 text-white focus:border-brand-500 focus:ring focus:ring-brand-500 focus:ring-opacity-50"
+              />
+            </Form.Control>
+            {errors.password && <Form.Message className="text-red-500">{errors.password}</Form.Message>}
+          </Form.Field>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="mt-4 w-full rounded-md bg-brand-500 px-4 py-2 text-white hover:bg-brand-600"
+          >
+            Login
+          </button>
+        </div>
+      </Form.Root>
+    </MotionDiv>
   );
 };
 
