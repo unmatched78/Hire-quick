@@ -10,7 +10,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  optimizeDeps: {
-    include: ['@chakra-ui/react', '@chakra-ui/system', '@chakra-ui/form-control', '@chakra-ui/icon'], // Pre-bundle Chakra UI
-  },
 })
