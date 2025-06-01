@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',  # Add Django Rest Framework
+    'rest_framework.authtoken',  # Add this
     'core',            # Add your app (e.g., 'core')
     'corsheaders',
 ]
