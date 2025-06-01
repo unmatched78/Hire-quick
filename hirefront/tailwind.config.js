@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/**/*.{js,jsx,ts,tsx}', // Scan all source files
+    './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     extend: {
@@ -13,11 +13,24 @@ module.exports = {
         },
       },
       backgroundImage: {
-        'gradient-to-br': 'linear-gradient(to bottom right, var(--tw-gradient-stops))', // Enable gradient direction
+        'gradient-to-br': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
       },
       gradientColorStops: (theme) => ({
-        ...theme('colors'), // Include all colors (e.g., gray-900, gray-800)
+        ...theme('colors'),
       }),
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'], // Modern font for headings
+        inter: ['Inter', 'sans-serif'], // Clean font for body
+      },
+      animation: {
+        'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
+      },
+      keyframes: {
+        'pulse-glow': {
+          '0%, 100%': { boxShadow: '0 0 15px rgba(121, 40, 202, 0.5)' },
+          '50%': { boxShadow: '0 0 30px rgba(121, 40, 202, 0.8)' },
+        },
+      },
     },
   },
   plugins: [],
