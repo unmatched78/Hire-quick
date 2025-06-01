@@ -34,8 +34,8 @@ const Navbar = () => {
             Sign Up
           </MotionButton>
         </Flex>
-      </Box>
-    </Flex>
+      </Flex>
+    </Box>
   );
 };
 
