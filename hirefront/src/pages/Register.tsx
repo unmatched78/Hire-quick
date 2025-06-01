@@ -1,4 +1,5 @@
-import { Box, Heading, VStack, Button, Select, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
+import { Box, Heading, VStack, Button, Select, Input, FormLabel, FormErrorMessage } from '@chakra-ui/react';
+import { FormControl } from '@chakra-ui/form-control'; // Correct import for FormControl
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -19,11 +20,10 @@ const Register = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: '' }); // Clear error on change
+    setErrors({ ...errors, [e.target.name]: '' });
   };
 
   const handleSubmit = async () => {
-    // Basic client-side validation
     let newErrors = { username: '', email: '', password: '', user_type: '' };
     if (!formData.username) newErrors.username = 'Username is required';
     if (!formData.email) newErrors.email = 'Email is required';
