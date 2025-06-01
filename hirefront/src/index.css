@@ -4,7 +4,7 @@
 
 /* Glowing background */
 body {
-  background: linear-gradient(to bottom right, #1a1a1a, #2a2a2a); /* Matches gray-900 to gray-800 */
+  @apply bg-gradient-to-br from-gray-900 to-gray-800;
 }
 
 .glow {
@@ -16,6 +16,7 @@ body {
   background: radial-gradient(circle at center, rgba(121, 40, 202, 0.3), transparent 70%);
   pointer-events: none;
 }
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
