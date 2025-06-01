@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',  # Add this
     'core',            # Add your app (e.g., 'core')
     'corsheaders',
+    'rest_framework_simplejwt',  # Add Simple JWT
 ]
 
 MIDDLEWARE = [
