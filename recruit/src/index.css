@@ -1,7 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
+/* :root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+} */
 @layer base {
   :root {
     --background: 0 0% 100%;
