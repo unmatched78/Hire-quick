@@ -1,14 +1,20 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@radix-ui/react-navigation-menu";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+} from "@radix-ui/react-navigation-menu";
 
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 overflow-hidden text-white">
-      {/* Glowing Animated Background Blobs */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-tr from-indigo-500 to-purple-500 opacity-70 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute -bottom-48 -right-48 w-[600px] h-[600px] bg-gradient-to-bl from-pink-500 to-indigo-500 opacity-60 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
+      {/* 1st Glowing Blob */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-tr from-indigo-500 to-purple-500 opacity-70 rounded-full blur-3xl animate-slow-pulse"></div>
+      {/* 2nd Glowing Blob */}
+      <div className="absolute -bottom-48 -right-48 w-[600px] h-[600px] bg-gradient-to-bl from-pink-500 to-indigo-500 opacity-60 rounded-full blur-3xl animate-slow-pulse"></div>
 
       {/* Navigation Bar */}
       <header className="w-full bg-black bg-opacity-40 backdrop-blur-lg sticky top-0 z-50">
@@ -20,11 +26,13 @@ export default function Home() {
           </div>
           <NavigationMenu>
             <NavigationMenuList className="flex space-x-8">
-              {['home', 'about', 'features', 'contact'].map((item) => (
+              {["home", "about", "features", "contact"].map((item) => (
                 <NavigationMenuItem key={item}>
                   <NavigationMenuLink
                     href={`#${item}`}
-                    className="relative text-lg font-medium uppercase tracking-wide text-white hover:text-pink-400 transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-pink-400 hover:after:w-full hover:after:transition-all after:transition-all"
+                    className="relative text-lg font-medium uppercase tracking-wide text-white hover:text-pink-400 transition-colors
+                               after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-pink-400
+                               hover:after:w-full hover:after:transition-all after:transition-all"
                   >
                     {item}
                   </NavigationMenuLink>
@@ -94,42 +102,37 @@ export default function Home() {
             Platform Features
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Feature Card 1 */}
             <motion.div
               className="bg-black bg-opacity-50 rounded-3xl shadow-xl p-8 flex flex-col items-center transform hover:scale-105 transition-transform"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <div className="text-5xl mb-4 text-pink-500 animate-pulse">📋</div>
+              <div className="text-5xl mb-4 text-pink-500 animate-slow-pulse">📋</div>
               <h3 className="text-2xl font-semibold mb-3">Post Jobs Effortlessly</h3>
               <p className="text-gray-300 text-center">
                 Create and customize job listings in seconds with our intuitive editor and templates.
               </p>
             </motion.div>
-
-            {/* Feature Card 2 */}
             <motion.div
               className="bg-black bg-opacity-50 rounded-3xl shadow-xl p-8 flex flex-col items-center transform hover:scale-105 transition-transform"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <div className="text-5xl mb-4 text-indigo-400 animate-pulse">🔍</div>
+              <div className="text-5xl mb-4 text-indigo-400 animate-slow-pulse">🔍</div>
               <h3 className="text-2xl font-semibold mb-3">Advanced Candidate Search</h3>
               <p className="text-gray-300 text-center">
                 Filter, sort, and connect with top talent using smart search and AI-driven recommendations.
               </p>
             </motion.div>
-
-            {/* Feature Card 3 */}
             <motion.div
               className="bg-black bg-opacity-50 rounded-3xl shadow-xl p-8 flex flex-col items-center transform hover:scale-105 transition-transform"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
             >
-              <div className="text-5xl mb-4 text-purple-400 animate-pulse">💬</div>
+              <div className="text-5xl mb-4 text-purple-400 animate-slow-pulse">💬</div>
               <h3 className="text-2xl font-semibold mb-3">Secure Messaging</h3>
               <p className="text-gray-300 text-center">
                 Communicate directly with candidates in real time with our encrypted messaging system.

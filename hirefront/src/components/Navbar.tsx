@@ -14,19 +14,23 @@ const Navbar = () => {
           <Link to="/jobs" className="text-white hover:text-brand-500">Jobs</Link>
           <Link to="/companies" className="text-white hover:text-brand-500">Companies</Link>
           <Link to="/dashboard" className="text-white hover:text-brand-500">Dashboard</Link>
-          <MotionButton
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-2 rounded-md border border-brand-500 px-4 py-2 text-white hover:bg-brand-500"
-          >
-            <UserIcon className="w-5 h-5" />
-            <Link to="/login">Login</Link>
-          </MotionButton>
-          <MotionButton
-            whileHover={{ scale: 1.05 }}
-            className="rounded-md bg-brand-500 px-4 py-2 text-white hover:bg-brand-600"
-          >
-            <Link to="/register">Sign Up</Link>
-          </MotionButton>
+          <Link to="/login">
+            <MotionButton
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-2 rounded-md border border-brand-500 px-4 py-2 text-white hover:bg-brand-500"
+            >
+              <UserIcon className="w-5 h-5" />
+              Login
+            </MotionButton>
+          </Link>
+          <Link to="/register">
+            <MotionButton
+              whileHover={{ scale: 1.05 }}
+              className="rounded-md bg-brand-500 px-4 py-2 text-white hover:bg-brand-600"
+            >
+              Sign Up
+            </MotionButton>
+          </Link>
         </div>
       </div>
     </nav>
