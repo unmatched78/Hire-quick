@@ -4,8 +4,12 @@ from .models import User, JobSeeker, Company, Job, Application, Review
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'user_type']
+        fields = ['id', 'username', 'email', 'user_type', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
 
+    def create(self, validated_data):
+        user = User(**validated_data)
+        return user
 class JobSeekerSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     class Meta:
