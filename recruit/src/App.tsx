@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from '@/components/ui/sonner';
 import LandingPage from '@/pages/LandingPage';
 import Login from '@/components/Login';
+import Register from '@/components/Register';
+import JobsPage from '@/pages/JobsPage';
+import Dashboard from '@/pages/Dashboard';
 import Navbar from '@/components/Navbar';
 import { useAuthStore } from '@/stores/auth';
 
@@ -15,7 +18,7 @@ function App() {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
 
   useEffect(() => {
-    initializeAuth(); // Check auth state on mount
+    initializeAuth();
   }, [initializeAuth]);
 
   return (
@@ -26,11 +29,9 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
-          {/* Example protected route */}
-          <Route
-            path="/dashboard"
-            element={<ProtectedRoute><div>Dashboard</div></ProtectedRoute>}
-          />
+          <Route path="/register" element={<Register />} />
+          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         </Routes>
       </div>
     </Router>
