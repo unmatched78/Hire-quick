@@ -4,10 +4,10 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Jobs from './pages/Jobs';
-// import JobDetail from './pages/JobDetail';
+import JobDetail from './pages/JobDetail';
 import Companies from './pages/Companies';
 import CompanyDetail from './pages/CompanyDetail';
-// import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
   return (
@@ -18,10 +18,10 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/jobs" element={<Jobs />} />
-        {/* <Route path="/jobs/:id" element={<JobDetail />} /> */}
+        <Route path="/jobs/:id" element={<JobDetail />} />
         <Route path="/companies" element={<Companies />} />
         <Route path="/companies/:id" element={<CompanyDetail />} />
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
