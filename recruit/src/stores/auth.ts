@@ -1,7 +1,5 @@
-import { create } from 'zustand';
-import jwtDecode from 'jwt-decode';
-import { toast } from 'sonner';
-
+import { jwtDecode } from 'jwt-decode'; // Use named import
+// Rest of the file remains the same
 interface JwtPayload {
   user_id: number;
   user_type: 'job_seeker' | 'company_rep';
@@ -22,7 +20,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   setTokens: (access: string, refresh: string) => {
     localStorage.setItem('access_token', access);
     localStorage.setItem('refresh_token', refresh);
-    const decoded: JwtPayload = jwtDecode(access);
+    const decoded: JwtPayload = jwtDecode(access); // Use named jwtDecode
     set({
       isAuthenticated: true,
       user: { id: decoded.user_id, user_type: decoded.user_type },
@@ -37,7 +35,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     const accessToken = localStorage.getItem('access_token');
     if (accessToken) {
       try {
-        const decoded: JwtPayload = jwtDecode(accessToken);
+        const decoded: JwtPayload = jwtDecode(accessToken); // Use named jwtDecode
         const currentTime = Date.now() / 1000;
         if (decoded.exp > currentTime) {
           set({
