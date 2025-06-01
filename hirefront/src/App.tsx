@@ -1,9 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Jobs from './pages/Jobs';
+import Register from './pages/Register';
 import Login from './pages/Login';
-// Add other page imports
+import Jobs from './pages/Jobs';
+import JobDetail from './pages/JobDetail';
+import Companies from './pages/Companies';
+import CompanyDetail from './pages/CompanyDetail';
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
   return (
@@ -11,9 +15,13 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        {/* Add more routes */}
+        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/jobs/:id" element={<JobDetail />} />
+        <Route path="/companies" element={<Companies />} />
+        <Route path="/companies/:id" element={<CompanyDetail />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
