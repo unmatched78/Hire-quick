@@ -1,123 +1,95 @@
-import { Box, Heading, Text, Button, VStack, SimpleGrid, Input, Icon } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { BriefcaseIcon, BuildingOffice2Icon, StarIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 
-const MotionBox = motion(Box);
-const MotionButton = motion(Button);
+const MotionDiv = motion.div;
 
 const Home = () => {
   return (
-    <Box position="relative" minH="100vh" className="glow">
+    <div className="relative min-h-screen glow">
       {/* Hero Section */}
-      <VStack py={20} textAlign="center" spacing={6}>
-        <MotionBox
+      <div className="py-20 text-center space-y-6">
+        <MotionDiv
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <Heading size="3xl" bgGradient="linear(to-r, brand.500, brand.600)" bgClip="text">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
             HireEasy: Your Ultimate Hiring Solution
-          </Heading>
-          <Text fontSize="xl" mt={4} maxW="2xl">
+          </h1>
+          <p className="mt-4 text-xl text-white max-w-2xl mx-auto">
             Discover top talent or land your dream job with our all-in-one platform for job seekers and companies.
-          </Text>
-          <Input
+          </p>
+          <input
             placeholder="Search for jobs..."
-            size="lg"
-            maxW="md"
-            mx="auto"
-            mt={6}
-            className="shadow-lg"
+            className="mt-6 w-full max-w-md mx-auto rounded-md border border-gray-600 bg-gray-700 p-3 text-white focus:border-brand-500 focus:ring focus:ring-brand-500 focus:ring-opacity-50"
           />
-          <MotionButton
-            colorScheme="brand"
-            size="lg"
-            whileHover={{ scale: 1.1 }}
-            as={Link}
+          <Link
             to="/jobs"
-            mt={4}
+            className="mt-4 inline-block rounded-md bg-brand-500 px-6 py-3 text-white hover:bg-brand-600"
           >
             Explore Jobs
-          </MotionButton>
-        </MotionBox>
-      </VStack>
+          </Link>
+        </MotionDiv>
+      </div>
       {/* Features Section */}
-      <SimpleGrid columns={[1, 2, 3]} spacing={10} p={8}>
-        <MotionBox
-          p={5}
-          shadow="lg"
-          borderWidth="1px"
-          rounded="md"
-          bg="gray.800"
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 p-8">
+        <MotionDiv
+          className="p-5 bg-gray-800 rounded-md shadow-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Icon as={BriefcaseIcon} w={8} h={8} color="brand.500" />
-          <Heading size="md" mt={4}>Find Your Dream Job</Heading>
-          <Text>Explore thousands of opportunities tailored to your skills.</Text>
-        </MotionBox>
-        <MotionBox
-          p={5}
-          shadow="lg"
-          borderWidth="1px"
-          rounded="md"
-          bg="gray.800"
+          <BriefcaseIcon className="w-8 h-8 text-brand-500" />
+          <h3 className="mt-4 text-xl font-bold text-white">Find Your Dream Job</h3>
+          <p className="text-white">Explore thousands of opportunities tailored to your skills.</p>
+        </MotionDiv>
+        <MotionDiv
+          className="p-5 bg-gray-800 rounded-md shadow-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Icon as={BuildingOffice2Icon} w={8} h={8} color="brand.500" />
-          <Heading size="md" mt={4}>Hire Top Talent</Heading>
-          <Text>Post jobs and find the perfect candidates with ease.</Text>
-        </MotionBox>
-        <MotionBox
-          p={5}
-          shadow="lg"
-          borderWidth="1px"
-          rounded="md"
-          bg="gray.800"
+          <BuildingOffice2Icon className="w-8 h-8 text-brand-500" />
+          <h3 className="mt-4 text-xl font-bold text-white">Hire Top Talent</h3>
+          <p className="text-white">Post jobs and find the perfect candidates with ease.</p>
+        </MotionDiv>
+        <MotionDiv
+          className="p-5 bg-gray-800 rounded-md shadow-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-          <Icon as={StarIcon} w={8} h={8} color="brand.500" />
-          <Heading size="md" mt={4}>Trusted Reviews</Heading>
-          <Text>Read authentic company reviews from real employees.</Text>
-        </MotionBox>
-      </SimpleGrid>
+          <StarIcon className="w-8 h-8 text-brand-500" />
+          <h3 className="mt-4 text-xl font-bold text-white">Trusted Reviews</h3>
+          <p className="text-white">Read authentic company reviews from real employees.</p>
+        </MotionDiv>
+      </div>
       {/* Testimonial Section */}
-      <Box py={10} textAlign="center" bg="gray.700">
-        <Heading size="xl" mb={6}>What Our Users Say</Heading>
-        <SimpleGrid columns={[1, 2]} spacing={8} px={8}>
-          <MotionBox
-            p={5}
-            shadow="lg"
-            rounded="md"
-            bg="gray.800"
+      <div className="py-10 text-center bg-gray-700">
+        <h2 className="text-3xl font-bold text-white mb-6">What Our Users Say</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8">
+          <MotionDiv
+            className="p-5 bg-gray-800 rounded-md shadow-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <Text>"HireEasy helped me land my dream job in just two weeks!"</Text>
-            <Text mt={4} fontWeight="bold">— Jane Doe</Text>
-          </MotionBox>
-          <MotionBox
-            p={5}
-            shadow="lg"
-            rounded="md"
-            bg="gray.800"
+            <p className="text-white">"HireEasy helped me land my dream job in just two weeks!"</p>
+            <p className="mt-4 font-bold text-white">— Jane Doe</p>
+          </MotionDiv>
+          <MotionDiv
+            className="p-5 bg-gray-800 rounded-md shadow-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <Text>"The easiest way to find top talent for our company."</Text>
-            <Text mt={4} fontWeight="bold">— Acme Corp</Text>
-          </MotionBox>
-        </SimpleGrid>
-      </Box>
-    </Box>
+            <p className="text-white">"The easiest way to find top talent for our company."</p>
+            <p className="mt-4 font-bold text-white">— Acme Corp</p>
+          </MotionDiv>
+        </div>
+      </div>
+    </div>
   );
 };
 
