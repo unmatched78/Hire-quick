@@ -9,6 +9,22 @@ class User(AbstractUser):
     )
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
 
+    # Override groups and user_permissions to avoid reverse accessor conflicts
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='core_user_set',  # Unique related_name to avoid clash
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='core_user_permissions_set',  # Unique related_name to avoid clash
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
+
 # JobSeeker profile linked to User
 class JobSeeker(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
