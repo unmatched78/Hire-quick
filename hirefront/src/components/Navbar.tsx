@@ -1,41 +1,35 @@
-import { Box, Flex, Button, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
-const MotionButton = motion(Button);
+const MotionButton = motion.button;
 
 const Navbar = () => {
   return (
-    <Box bg="gray.800" px={4} py={3} shadow="lg">
-      <Flex h={16} alignItems="center" justifyContent="space-between">
-        <Text fontSize="2xl" fontWeight="bold" color="brand.500">
-          HireEasy
-        </Text>
-        <Flex gap={6} alignItems="center">
+    <nav className="bg-gray-800 px-4 py-3 shadow-lg">
+      <div className="flex h-16 items-center justify-between">
+        <span className="text-2xl font-bold text-brand-500">HireEasy</span>
+        <div className="flex items-center gap-6">
           <Link to="/" className="text-white hover:text-brand-500">Home</Link>
           <Link to="/jobs" className="text-white hover:text-brand-500">Jobs</Link>
           <Link to="/companies" className="text-white hover:text-brand-500">Companies</Link>
           <Link to="/dashboard" className="text-white hover:text-brand-500">Dashboard</Link>
           <MotionButton
-            colorScheme="brand"
-            variant="outline"
             whileHover={{ scale: 1.05 }}
-            leftIcon={<UserIcon className="w-5 h-5" />}
+            className="flex items-center gap-2 rounded-md border border-brand-500 px-4 py-2 text-white hover:bg-brand-500"
           >
+            <UserIcon className="w-5 h-5" />
             <Link to="/login">Login</Link>
           </MotionButton>
           <MotionButton
-            colorScheme="brand"
             whileHover={{ scale: 1.05 }}
-            as={Link}
-            to="/register"
+            className="rounded-md bg-brand-500 px-4 py-2 text-white hover:bg-brand-600"
           >
-            Sign Up
+            <Link to="/register">Sign Up</Link>
           </MotionButton>
-        </Flex>
-      </Flex>
-    </Box>
+        </div>
+      </div>
+    </nav>
   );
 };
 
