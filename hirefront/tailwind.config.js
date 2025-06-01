@@ -1,21 +1,13 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",  // ← Very important!
-  ],
+// tailwind.config.js
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      // If you don’t actually need a custom animation-delay, you can remove this.
-      keyframes: {
-        // Example of a “slow pulse” just to illustrate custom keyframes
-        "slow-pulse": {
-          "0%, 100%": { opacity: 0.7 },
-          "50%": { opacity: 1 },
+      colors: {
+        brand: {
+          500: "#4F46E5",
+          600: "#3730A3",
         },
-      },
-      animation: {
-        "slow-pulse": "slow-pulse 4s ease-in-out infinite",
       },
     },
   },
