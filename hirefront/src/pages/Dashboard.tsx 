@@ -1,0 +1,12 @@
+import { Box, Heading } from '@chakra-ui/react';
+
+const Dashboard = () => {
+  return (
+    <Box p={8}>
+      <Heading>Dashboard</Heading>
+      <p>Dashboard page coming soon...</p>
+    </Box>
+  );
+};
+
+export default Dashboard;

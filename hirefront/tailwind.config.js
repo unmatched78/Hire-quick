@@ -12,7 +12,13 @@ module.exports = {
           700: '#00DDEB', // Neon cyan
         },
       },
+      backgroundImage: {
+        'gradient-to-br': 'linear-gradient(to bottom right, var(--tw-gradient-stops))', // Enable gradient utilities
+      },
+      gradientColorStops: (theme) => ({
+        ...theme('colors'), // Include all colors (e.g., gray-900, gray-800)
+      }),
     },
   },
-  plugins: [], // Remove flowbite/plugin
+  plugins: [],
 };
