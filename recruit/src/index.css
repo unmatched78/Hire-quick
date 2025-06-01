@@ -2,29 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
-  --background: #0f172a;
-  --foreground: #ffffff;
-  --glow: rgba(59, 130, 246, 0.5);
-}
-
-.dark {
-  background: var(--background);
-  color: var(--foreground);
+  --background: #ffffff;
+  --foreground: #1e293b;
+  --glow-blue: rgba(59, 130, 246, 0.5);
+  --glow-purple: rgba(139, 92, 246, 0.5);
 }
 
 body {
-  @apply dark;
+  background: var(--background);
+  color: var(--foreground);
 }
 
 /* Glowing hover effect */
 .glow-on-hover {
   transition: all 0.3s ease;
-  box-shadow: 0 0 10px var(--glow);
+  box-shadow: 0 0 10px var(--glow-blue);
 }
 .glow-on-hover:hover {
-  box-shadow: 0 0 20px var(--glow), 0 0 30px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 20px var(--glow-blue), 0 0 30px var(--glow-purple);
+}
+
+/* Consistent card styling */
+.card {
+  @apply bg-white border border-gray-200 rounded-lg h-full;
+}
+
+/* Ensure Shadcn UI buttons have consistent styling */
+button {
+  @apply transition-all duration-300;
 }
 
 @layer base {

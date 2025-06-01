@@ -4,17 +4,22 @@ import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
 
 const CTAContainer = styled.div`
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  padding: 6rem 2rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+  padding: 6rem 1rem;
   text-align: center;
-  box-shadow: 0 0 20px var(--glow);
+  box-shadow: 0 0 15px var(--glow-purple);
   border-radius: 12px;
 `;
 
 const PulseButton = styled(Button)`
   animation: pulse 2s infinite;
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+  color: white;
+  &:hover {
+    background: linear-gradient(45deg, #2563eb, #7c3aed);
+  }
   @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 var(--glow); }
+    0% { box-shadow: 0 0 0 0 var(--glow-blue); }
     70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
     100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
   }
@@ -23,12 +28,12 @@ const PulseButton = styled(Button)`
 const CTASection = () => {
   const { t } = useTranslation();
   return (
-    <CTAContainer>
+    <CTAContainer className="max-w-5xl mx-auto">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-4xl md:text-5xl font-bold mb-6 text-white tracking-tight"
+        className="text-4xl md:text-5xl font-bold mb-6 text-gray-900"
       >
         {t('cta_title')}
       </motion.h2>
@@ -36,7 +41,7 @@ const CTASection = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="text-xl mb-8 max-w-2xl mx-auto text-gray-200"
+        className="text-xl mb-8 text-gray-600 max-w-2xl mx-auto"
       >
         {t('cta_subtitle')}
       </motion.p>
@@ -45,11 +50,7 @@ const CTASection = () => {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <PulseButton
-          variant="default"
-          size="lg"
-          className="bg-white text-blue-600 hover:bg-gray-100 glow-on-hover text-lg"
-        >
+        <PulseButton size="lg" className="w-48 glow-on-hover">
           {t('cta_button')}
         </PulseButton>
       </motion.div>
