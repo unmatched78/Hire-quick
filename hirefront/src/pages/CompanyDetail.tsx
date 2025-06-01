@@ -1,11 +1,17 @@
-import { Box, Heading } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+
+const MotionDiv = motion.div;
 
 const CompanyDetail = () => {
   return (
-    <Box p={8}>
-      <Heading>Company Detail</Heading>
-      <p>Company detail page coming soon...</p>
-    </Box>
+    <MotionDiv
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="mx-auto mt-10 max-w-3xl p-8"
+    >
+      <h2 className="text-3xl font-bold text-white">Company Detail</h2>
+      <p className="text-white">Company detail page coming soon...</p>
+    </MotionDiv>
   );
 };
 

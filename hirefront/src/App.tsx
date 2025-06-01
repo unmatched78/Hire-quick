@@ -4,10 +4,10 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Jobs from './pages/Jobs';
-import JobDetail from './pages/JobDetail';
+// import JobDetail from './pages/JobDetail';
 import Companies from './pages/Companies';
 import CompanyDetail from './pages/CompanyDetail';
-import Dashboard from './pages/Dashboard';
+// import Dashboard from './pages/Dashboard';
 
 const App = () => {
   return (
