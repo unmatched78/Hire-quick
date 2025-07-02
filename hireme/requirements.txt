@@ -1,1 +1,8 @@
 django
+djangorestframework-simplejwt
+djangorestframework
+cloudinary
+psycopg2-binary
+python-dotenv
+django-cors-headers
+weasyprint
