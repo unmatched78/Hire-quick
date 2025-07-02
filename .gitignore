@@ -4,6 +4,7 @@
 /fileadmin/_temp_/
 /fileadmin/_processed_/
 /uploads/
+venv
 # Ignore cache
 /typo3conf/temp_CACHED*
 /typo3conf/temp_fieldInfo.php
