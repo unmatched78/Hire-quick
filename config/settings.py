@@ -45,7 +45,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "hireme.urls"
+ROOT_URLCONF = "config.urls"
 AUTH_USER_MODEL = 'core.User'
 TEMPLATES = [
     {
@@ -62,7 +62,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "hireme.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
