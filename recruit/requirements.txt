@@ -10,7 +10,7 @@ spacy
 psycopg2-binary
 redis
 django-redis
-
+pycountry
 # AI and Machine Learning
 openai
 crewai
