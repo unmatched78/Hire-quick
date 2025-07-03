@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import pytesseract
 from PIL import Image
-import face_recognition
+# import face_recognition
 import json
 import re
 from datetime import datetime

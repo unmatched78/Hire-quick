@@ -32,3 +32,7 @@ INFO 2025-07-03 11:56:35,971 autoreload 13328 6780 C:\Users\UGHE Student\Desktop
 INFO 2025-07-03 11:56:41,045 autoreload 4648 15384 Watching for file changes with StatReloader
 INFO 2025-07-03 11:58:17,384 autoreload 4648 15384 C:\Users\UGHE Student\Desktop\Hireme\recruit\talent_pool\models.py changed, reloading.
 INFO 2025-07-03 11:58:23,731 autoreload 20716 20436 Watching for file changes with StatReloader
+INFO 2025-07-03 12:00:29,987 autoreload 20716 20436 C:\Users\UGHE Student\Desktop\Hireme\recruit\talent_pool\models.py changed, reloading.
+INFO 2025-07-03 12:00:34,215 autoreload 3452 20496 Watching for file changes with StatReloader
+INFO 2025-07-03 12:02:37,718 autoreload 3452 20496 C:\Users\UGHE Student\Desktop\Hireme\recruit\background_verification\ai_verification.py changed, reloading.
+INFO 2025-07-03 12:02:42,286 autoreload 19004 4552 Watching for file changes with StatReloader

@@ -12,6 +12,7 @@ redis
 django-redis
 pycountry
 # AI and Machine Learning
+libmagic
 openai
 crewai
 langchain
