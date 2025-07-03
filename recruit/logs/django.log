@@ -26,3 +26,4 @@ INFO 2025-07-03 11:52:34,736 autoreload 6900 19552 C:\Users\UGHE Student\Desktop
 INFO 2025-07-03 11:52:38,889 autoreload 13104 5564 Watching for file changes with StatReloader
 INFO 2025-07-03 11:53:25,179 autoreload 13104 5564 C:\Users\UGHE Student\Desktop\Hireme\recruit\talent_pool\models.py changed, reloading.
 INFO 2025-07-03 11:53:30,174 autoreload 19344 6384 Watching for file changes with StatReloader
+INFO 2025-07-03 11:54:41,723 autoreload 19344 6384 C:\Users\UGHE Student\Desktop\Hireme\recruit\talent_pool\forms.py changed, reloading.

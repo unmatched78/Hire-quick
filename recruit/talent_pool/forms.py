@@ -184,7 +184,7 @@ class CandidatePreferencesForm(forms.ModelForm):
 
 class JobMatchFilterForm(forms.Form):
     status = forms.ChoiceField(
-        choices=[('', 'All Statuses')] + list(CandidatePreferences.STATUS_CHOICES),
+        choices=[('', 'All Statuses')] ,#+ list(CandidatePreferences.STATUS_CHOICES)
         required=False,
         widget=forms.Select(attrs={'class': 'form-select'})
     )
