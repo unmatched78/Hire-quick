@@ -7,3 +7,5 @@ INFO 2025-07-03 11:31:44,257 autoreload 4764 20872 C:\Users\UGHE Student\Desktop
 INFO 2025-07-03 11:31:49,204 autoreload 3132 17892 Watching for file changes with StatReloader
 INFO 2025-07-03 11:33:21,634 autoreload 3132 17892 C:\Users\UGHE Student\Desktop\Hireme\recruit\jobs\models.py changed, reloading.
 INFO 2025-07-03 11:33:24,935 autoreload 18100 19272 Watching for file changes with StatReloader
+INFO 2025-07-03 11:36:24,384 autoreload 10212 2660 Watching for file changes with StatReloader
+INFO 2025-07-03 11:38:00,348 autoreload 10212 2660 C:\Users\UGHE Student\Desktop\Hireme\recruit\applications\forms.py changed, reloading.
