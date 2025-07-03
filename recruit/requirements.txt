@@ -16,6 +16,7 @@ openai
 crewai
 langchain
 langchain-openai
+face_recognition
 tiktoken
 numpy
 pandas
