@@ -20,3 +20,5 @@ INFO 2025-07-03 11:45:06,588 autoreload 4092 11712 C:\Users\UGHE Student\Desktop
 INFO 2025-07-03 11:45:11,358 autoreload 17872 6396 Watching for file changes with StatReloader
 INFO 2025-07-03 11:45:45,929 autoreload 17872 6396 C:\Users\UGHE Student\Desktop\Hireme\recruit\applications\urls.py changed, reloading.
 INFO 2025-07-03 11:45:50,379 autoreload 4540 20860 Watching for file changes with StatReloader
+INFO 2025-07-03 11:47:58,713 autoreload 4540 20860 C:\Users\UGHE Student\Desktop\Hireme\recruit\applications\urls.py changed, reloading.
+INFO 2025-07-03 11:48:05,550 autoreload 6900 19552 Watching for file changes with StatReloader
