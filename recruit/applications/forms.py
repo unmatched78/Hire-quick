@@ -72,3 +72,5 @@ class InterviewFeedbackForm(forms.ModelForm):
             ),
             'status': forms.Select(attrs={'class': 'form-control'}),
         }
+class ApplicationNotesForm(forms.ModelForm):
+    pass

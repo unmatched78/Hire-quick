@@ -173,3 +173,5 @@ class SavedJob(models.Model):
     
     def __str__(self):
         return f"{self.candidate.get_full_name()} saved {self.job.title}"
+class ApplicationForm(models.Model):
+    pass

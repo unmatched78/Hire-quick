@@ -5,7 +5,7 @@ django-crispy-forms
 crispy-bootstrap5
 python-decouple
 dj-database-url
-
+spacy
 # Database
 psycopg2-binary
 redis

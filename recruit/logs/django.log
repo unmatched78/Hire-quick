@@ -1,1 +1,9 @@
 INFO 2025-07-03 11:22:03,482 autoreload 12368 3996 Watching for file changes with StatReloader
+INFO 2025-07-03 11:24:38,709 autoreload 8808 17484 Watching for file changes with StatReloader
+INFO 2025-07-03 11:27:32,502 autoreload 3844 13524 Watching for file changes with StatReloader
+INFO 2025-07-03 11:28:43,116 autoreload 3844 13524 C:\Users\UGHE Student\Desktop\Hireme\recruit\recruitment_platform\urls.py changed, reloading.
+INFO 2025-07-03 11:28:48,833 autoreload 4764 20872 Watching for file changes with StatReloader
+INFO 2025-07-03 11:31:44,257 autoreload 4764 20872 C:\Users\UGHE Student\Desktop\Hireme\recruit\applications\forms.py changed, reloading.
+INFO 2025-07-03 11:31:49,204 autoreload 3132 17892 Watching for file changes with StatReloader
+INFO 2025-07-03 11:33:21,634 autoreload 3132 17892 C:\Users\UGHE Student\Desktop\Hireme\recruit\jobs\models.py changed, reloading.
+INFO 2025-07-03 11:33:24,935 autoreload 18100 19272 Watching for file changes with StatReloader
