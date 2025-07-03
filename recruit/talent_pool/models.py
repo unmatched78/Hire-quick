@@ -186,6 +186,7 @@ class CandidatePreferences(models.Model):
         ('onsite', 'Onsite Only'),
     ]
     
+    
     JOB_TYPE_CHOICES = [
         ('full-time', 'Full Time'),
         ('part-time', 'Part Time'),
@@ -204,6 +205,7 @@ class CandidatePreferences(models.Model):
     
     # Location preferences
     preferred_locations = models.JSONField(default=list, blank=True)
+    STATUS_CHOICES=models.CharField(max_length=20, choices=REMOTE_PREFERENCES, default='hybrid')
     remote_preference = models.CharField(max_length=20, choices=REMOTE_PREFERENCES, default='hybrid')
     willing_to_relocate = models.BooleanField(default=False)
     
