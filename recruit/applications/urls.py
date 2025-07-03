@@ -12,7 +12,7 @@ urlpatterns = [
     path('apply/<int:job_id>/', views.apply_for_job, name='apply'),
     path('my-applications/', views.MyApplicationsView, name='my_applications'),
     path('recruiter-applications/', views.RecruiterApplicationsView, name='recruiter_applications'),
-    path('<int:pk>/', views.application_detail, name='detail'),
+    path('<int:pk>/', views.aApplicationDetailView, name='detail'),
     path('<int:pk>/update-status/', views.update_application_status, name='update_status'),
     path('<int:pk>/add-notes/', views.add_application_notes, name='add_notes'),
     
