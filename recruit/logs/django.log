@@ -36,3 +36,5 @@ INFO 2025-07-03 12:00:29,987 autoreload 20716 20436 C:\Users\UGHE Student\Deskto
 INFO 2025-07-03 12:00:34,215 autoreload 3452 20496 Watching for file changes with StatReloader
 INFO 2025-07-03 12:02:37,718 autoreload 3452 20496 C:\Users\UGHE Student\Desktop\Hireme\recruit\background_verification\ai_verification.py changed, reloading.
 INFO 2025-07-03 12:02:42,286 autoreload 19004 4552 Watching for file changes with StatReloader
+INFO 2025-07-03 12:05:22,540 autoreload 19004 4552 C:\Users\UGHE Student\Desktop\Hireme\recruit\ai_tools\ai_crew.py changed, reloading.
+INFO 2025-07-03 12:05:26,993 autoreload 19912 1124 Watching for file changes with StatReloader
