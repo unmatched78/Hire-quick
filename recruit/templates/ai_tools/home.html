@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}AI-Powered Job Application Tools - RecruitPro{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-primary">
+                    <i class="fas fa-robot me-3"></i>AI-Powered Job Application Tools
+                </h1>
+                <p class="lead text-muted">Transform your job search with AI-powered document tailoring</p>
+            </div>
+        </div>
+    </div>
+    
+    {% if not ai_enabled %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="alert alert-warning text-center">
+                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                <h4>AI Tools Currently Unavailable</h4>
+                <p>Our AI-powered tools are currently disabled. Please contact support for assistance.</p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="feature-icon mx-auto mb-3">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h5 class="card-title">Smart CV Generation</h5>
+                    <p class="card-text">AI analyzes job requirements and customizes your CV to highlight relevant skills and experience.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="feature-icon mx-auto mb-3">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h5 class="card-title">Tailored Cover Letters</h5>
+                    <p class="card-text">Generate compelling cover letters that address specific job requirements and company culture.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="feature-icon mx-auto mb-3">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h5 class="card-title">Multiple Formats</h5>
+                    <p class="card-text">Download your documents in PDF and JPEG formats, ready for any application system.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Action Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+            <div class="card bg-primary text-white">
+                <div class="card-body p-5">
+                    <h3 class="card-title">Ready to Create Your Perfect Application?</h3>
+                    <p class="card-text mb-4">Simply provide a job URL and your profile information, and our AI will create customized documents for you.</p>
+                    <a href="{% url 'ai_tools:generate' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-magic me-2"></i>Generate CV & Cover Letter
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Requests -->
+    {% if recent_requests %}
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-4">Your Recent Requests</h3>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in recent_requests %}
+                        <tr>
+                            <td>{{ request.job_title }}</td>
+                            <td>{{ request.company_name }}</td>
+                            <td>
+                                <span class="badge bg-{% if request.status == 'completed' %}success{% elif request.status == 'failed' %}danger{% elif request.status == 'processing' %}warning{% else %}secondary{% endif %}">
+                                    {{ request.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ request.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <a href="{% url 'ai_tools:request_detail' request.pk %}" class="btn btn-sm btn-outline-primary">
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-3">
+                <a href="{% url 'ai_tools:request_list' %}" class="btn btn-outline-primary">View All Requests</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% endif %}
+</div>
+{% endblock %}

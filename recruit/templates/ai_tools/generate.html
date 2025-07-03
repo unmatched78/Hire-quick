@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Generate CV & Cover Letter - RecruitPro{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-magic me-2"></i>Generate AI-Powered Application Documents
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Job URL Section -->
+                        <div class="mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-link me-2"></i>Job Information
+                            </h5>
+                            <div class="mb-3">
+                                <label for="{{ form.job_url.id_for_label }}" class="form-label">Job Posting URL *</label>
+                                {{ form.job_url }}
+                                <div class="form-text">{{ form.job_url.help_text }}</div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <!-- Profile Information Section -->
+                        <div class="mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-user me-2"></i>Your Profile Information
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ profile_form.full_name.id_for_label }}" class="form-label">Full Name *</label>
+                                    {{ profile_form.full_name }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ profile_form.current_title.id_for_label }}" class="form-label">Current Title *</label>
+                                    {{ profile_form.current_title }}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ profile_form.email.id_for_label }}" class="form-label">Email *</label>
+                                    {{ profile_form.email }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ profile_form.phone.id_for_label }}" class="form-label">Phone *</label>
+                                    {{ profile_form.phone }}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ profile_form.location.id_for_label }}" class="form-label">Location *</label>
+                                    {{ profile_form.location }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ profile_form.linkedin.id_for_label }}" class="form-label">LinkedIn Profile *</label>
+                                    {{ profile_form.linkedin }}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ profile_form.professional_summary.id_for_label }}" class="form-label">Professional Summary *</label>
+                                {{ profile_form.professional_summary }}
+                                <div class="form-text">Brief overview of your professional background and goals</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ profile_form.skills.id_for_label }}" class="form-label">Skills *</label>
+                                {{ profile_form.skills }}
+                                <div class="form-text">{{ profile_form.skills.help_text }}</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ profile_form.experience.id_for_label }}" class="form-label">Work Experience *</label>
+                                {{ profile_form.experience }}
+                                <div class="form-text">{{ profile_form.experience.help_text }}</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ profile_form.education.id_for_label }}" class="form-label">Education *</label>
+                                {{ profile_form.education }}
+                                <div class="form-text">{{ profile_form.education.help_text }}</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ profile_form.certifications.id_for_label }}" class="form-label">Certifications</label>
+                                {{ profile_form.certifications }}
+                                <div class="form-text">{{ profile_form.certifications.help_text }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'ai_tools:home' %}" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-cogs me-2"></i>Generate Documents
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

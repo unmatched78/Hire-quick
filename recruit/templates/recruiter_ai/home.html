@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Recruiter Tools - RecruitPro{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-primary">
+                    <i class="fas fa-robot me-3"></i>AI Recruiter Assistant
+                </h1>
+                <p class="lead text-muted">Streamline your hiring process with AI-powered tools</p>
+            </div>
+        </div>
+    </div>
+    
+    {% if not ai_enabled %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="alert alert-warning text-center">
+                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                <h4>AI Tools Currently Unavailable</h4>
+                <p>AI-powered features are currently disabled. Please contact your administrator.</p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    
+    <!-- Feature Cards -->
+    <div class="row mb-5">
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="feature-icon mx-auto mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h5 class="card-title">Smart Job Descriptions</h5>
+                    <p class="card-text">Generate compelling job descriptions, requirements, and benefits using AI.</p>
+                    <a href="{% url 'recruiter_ai:generate_job' %}" class="btn btn-primary">
+                        <i class="fas fa-magic me-2"></i>Generate Job Description
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="feature-icon mx-auto mb-3" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h5 class="card-title">Smart Scheduling</h5>
+                    <p class="card-text">Intelligent interview scheduling with automated email notifications.</p>
+                    <a href="{% url 'recruiter_ai:calendar' %}" class="btn btn-success">
+                        <i class="fas fa-calendar me-2"></i>View Calendar
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="feature-icon mx-auto mb-3" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-questions"></i>
+                    </div>
+                    <h5 class="card-title">Interview Questions</h5>
+                    <p class="card-text">AI-generated interview questions tailored to specific roles and skills.</p>
+                    <a href="#" class="btn btn-info" onclick="showInterviewQuestions()">
+                        <i class="fas fa-lightbulb me-2"></i>Get Questions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    {% if recent_generations %}
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-4">Recent AI Generations</h3>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for generation in recent_generations %}
+                        <tr>
+                            <td>{{ generation.job_title }}</td>
+                            <td>
+                                <span class="badge bg-{% if generation.status == 'completed' %}success{% elif generation.status == 'failed' %}danger{% elif generation.status == 'processing' %}warning{% else %}secondary{% endif %}">
+                                    {{ generation.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ generation.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <a href="{% url 'recruiter_ai:generation_detail' generation.pk %}" class="btn btn-sm btn-outline-primary">
+                                    View Details
+                                </a>
+                                {% if generation.status == 'completed' and not generation.job_created %}
+                                <a href="{% url 'recruiter_ai:create_job_from_ai' generation.pk %}" class="btn btn-sm btn-success">
+                                    Create Job
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% endif %}
+</div>
+
+<!-- Interview Questions Modal -->
+<div class="modal fade" id="interviewQuestionsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">AI-Generated Interview Questions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="questionForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Job Title</label>
+                            <input type="text" class="form-control" id="jobTitle" placeholder="e.g., Software Engineer">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Experience Level</label>
+                            <select class="form-control" id="experienceLevel">
+                                <option value="entry">Entry Level</option>
+                                <option value="mid" selected>Mid Level</option>
+                                <option value="senior">Senior Level</option>
+                                <option value="executive">Executive Level</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Key Skills (comma-separated)</label>
+                        <input type="text" class="form-control" id="skills" placeholder="e.g., JavaScript, React, Node.js">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="generateQuestions()">
+                        <i class="fas fa-magic me-2"></i>Generate Questions
+                    </button>
+                </form>
+                
+                <div id="questionsResult" class="mt-4" style="display: none;">
+                    <div id="questionsContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showInterviewQuestions() {
+    new bootstrap.Modal(document.getElementById('interviewQuestionsModal')).show();
+}
+
+function generateQuestions() {
+    const jobTitle = document.getElementById('jobTitle').value;
+    const skills = document.getElementById('skills').value;
+    const experienceLevel = document.getElementById('experienceLevel').value;
+    
+    if (!jobTitle) {
+        alert('Please enter a job title');
+        return;
+    }
+    
+    // Show loading
+    document.getElementById('questionsResult').style.display = 'block';
+    document.getElementById('questionsContent').innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Generating questions...</div>';
+    
+    // Make AJAX request
+    fetch(`{% url 'recruiter_ai:interview_suggestions' %}?job_title=${encodeURIComponent(jobTitle)}&skills=${encodeURIComponent(skills)}&experience_level=${encodeURIComponent(experienceLevel)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayQuestions(data.questions);
+            } else {
+                document.getElementById('questionsContent').innerHTML = `<div class="alert alert-danger">Error: ${data.error}</div>`;
+            }
+        })
+        .catch(error => {
+            document.getElementById('questionsContent').innerHTML = '<div class="alert alert-danger">Failed to generate questions. Please try again.</div>';
+        });
+}
+
+function displayQuestions(questions) {
+    let html = '';
+    
+    if (questions.behavioral) {
+        html += '<h6 class="text-primary">Behavioral Questions</h6><ul>';
+        questions.behavioral.forEach(q => html += `<li>${q}</li>`);
+        html += '</ul>';
+    }
+    
+    if (questions.technical) {
+        html += '<h6 class="text-primary">Technical Questions</h6><ul>';
+        questions.technical.forEach(q => html += `<li>${q}</li>`);
+        html += '</ul>';
+    }
+    
+    if (questions.situational) {
+        html += '<h6 class="text-primary">Situational Questions</h6><ul>';
+        questions.situational.forEach(q => html += `<li>${q}</li>`);
+        html += '</ul>';
+    }
+    
+    if (questions.culture_fit) {
+        html += '<h6 class="text-primary">Culture Fit Questions</h6><ul>';
+        questions.culture_fit.forEach(q => html += `<li>${q}</li>`);
+        html += '</ul>';
+    }
+    
+    document.getElementById('questionsContent').innerHTML = html;
+}
+</script>
+{% endblock %}

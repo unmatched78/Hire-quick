@@ -1,0 +1,395 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Parsed Resumes{% endblock %}
+
+{% block extra_css %}
+<style>
+    .filter-card {
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .resume-card {
+        border-radius: 0.5rem;
+        transition: transform 0.2s;
+    }
+    
+    .resume-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+    
+    .match-badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    
+    .match-high {
+        border-color: #28a745;
+        color: #28a745;
+    }
+    
+    .match-medium {
+        border-color: #ffc107;
+        color: #ffc107;
+    }
+    
+    .match-low {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    
+    .skill-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        margin: 0.125rem;
+        background: #e9ecef;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>
+                <i class="fas fa-file-alt me-2 text-primary"></i>
+                Parsed Resumes
+            </h2>
+            <p class="text-muted">
+                {{ paginator.count }} parsed resumes found
+            </p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'applications:resume_analytics' %}" class="btn btn-outline-primary">
+                <i class="fas fa-chart-bar me-2"></i>Analytics Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Parsed</h5>
+                    <div class="display-6">{{ stats.total_parsed }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">High Match (80%+)</h5>
+                    <div class="display-6">{{ stats.high_match }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Medium Match (60-79%)</h5>
+                    <div class="display-6">{{ stats.medium_match }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Low Match (<60%)</h5>
+                    <div class="display-6">{{ stats.low_match }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Filters -->
+        <div class="col-md-3">
+            <div class="card filter-card">
+                <div class="card-header">
+                    <h5><i class="fas fa-filter me-2"></i>Filters</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" action="{% url 'applications:parsed_resume_list' %}">
+                        <div class="mb-3">
+                            <label for="job" class="form-label">Job</label>
+                            <select class="form-select" id="job" name="job">
+                                <option value="">All Jobs</option>
+                                {% for job in recruiter_jobs %}
+                                    <option value="{{ job.id }}" {% if request.GET.job == job.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ job.title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="min_match" class="form-label">Minimum Match Score</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="min_match" name="min_match" 
+                                    min="0" max="100" step="5" value="{{ request.GET.min_match|default:'' }}">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="min_experience" class="form-label">Minimum Experience</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="min_experience" name="min_experience" 
+                                    min="0" step="1" value="{{ request.GET.min_experience|default:'' }}">
+                                <span class="input-group-text">years</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="career_level" class="form-label">Career Level</label>
+                            <select class="form-select" id="career_level" name="career_level">
+                                <option value="">All Levels</option>
+                                <option value="Junior" {% if request.GET.career_level == 'Junior' %}selected{% endif %}>Junior</option>
+                                <option value="Mid" {% if request.GET.career_level == 'Mid' %}selected{% endif %}>Mid-Level</option>
+                                <option value="Senior" {% if request.GET.career_level == 'Senior' %}selected{% endif %}>Senior</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="sort" class="form-label">Sort By</label>
+                            <select class="form-select" id="sort" name="sort">
+                                <option value="-skill_match_percentage" {% if request.GET.sort == '-skill_match_percentage' or not request.GET.sort %}selected{% endif %}>
+                                    Match Score (High to Low)
+                                </option>
+                                <option value="skill_match_percentage" {% if request.GET.sort == 'skill_match_percentage' %}selected{% endif %}>
+                                    Match Score (Low to High)
+                                </option>
+                                <option value="-total_experience_years" {% if request.GET.sort == '-total_experience_years' %}selected{% endif %}>
+                                    Experience (High to Low)
+                                </option>
+                                <option value="total_experience_years" {% if request.GET.sort == 'total_experience_years' %}selected{% endif %}>
+                                    Experience (Low to High)
+                                </option>
+                                <option value="-ai_score" {% if request.GET.sort == '-ai_score' %}selected{% endif %}>
+                                    AI Score (High to Low)
+                                </option>
+                                <option value="-parsed_at" {% if request.GET.sort == '-parsed_at' %}selected{% endif %}>
+                                    Most Recent
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                            <a href="{% url 'applications:parsed_resume_list' %}" class="btn btn-outline-secondary mt-2">
+                                Clear Filters
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card filter-card">
+                <div class="card-header">
+                    <h5><i class="fas fa-tasks me-2"></i>Bulk Actions</h5>
+                </div>
+                <div class="card-body">
+                    <form id="bulkActionForm" method="post" action="{% url 'applications:bulk_parse_resumes' %}">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="button" id="selectAllBtn" class="btn btn-outline-primary">
+                                <i class="fas fa-check-square me-2"></i>Select All
+                            </button>
+                            <button type="button" id="deselectAllBtn" class="btn btn-outline-secondary">
+                                <i class="fas fa-square me-2"></i>Deselect All
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-play me-2"></i>Parse Selected Resumes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resume List -->
+        <div class="col-md-9">
+            {% if parsed_resumes %}
+                <div class="row">
+                    {% for parsed_resume in parsed_resumes %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card resume-card position-relative">
+                                <div class="match-badge 
+                                    {% if parsed_resume.skill_match_percentage >= 80 %}match-high
+                                    {% elif parsed_resume.skill_match_percentage >= 60 %}match-medium
+                                    {% else %}match-low{% endif %}">
+                                    {{ parsed_resume.skill_match_percentage|floatformat:0 }}%
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ parsed_resume.full_name|default:"Unnamed Candidate" }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        {{ parsed_resume.application.job.title }}
+                                    </h6>
+                                    
+                                    <div class="mb-2">
+                                        <small class="text-muted">Experience:</small>
+                                        <strong>{{ parsed_resume.total_experience_years|floatformat:1 }} years</strong>
+                                    </div>
+                                    
+                                    <div class="mb-2">
+                                        <small class="text-muted">Career Level:</small>
+                                        <strong>{{ parsed_resume.career_level|default:"Unknown" }}</strong>
+                                    </div>
+                                    
+                                    <div class="mb-2">
+                                        <small class="text-muted">AI Score:</small>
+                                        <strong>{{ parsed_resume.ai_score|default:"N/A" }}/10</strong>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-muted">Top Skills:</small>
+                                        <div>
+                                            {% for skill in parsed_resume.matched_skills|slice:":5" %}
+                                                <span class="skill-badge bg-success text-white">{{ skill }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input resume-checkbox" type="checkbox" 
+                                            name="applications" value="{{ parsed_resume.application.id }}"
+                                            form="bulkActionForm" id="resume-{{ parsed_resume.id }}">
+                                        <label class="form-check-label" for="resume-{{ parsed_resume.id }}">
+                                            Select for bulk action
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <a href="{% url 'applications:view_parsed_resume' parsed_resume.application.id %}" 
+                                            class="btn btn-primary">
+                                            <i class="fas fa-search me-2"></i>View Details
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    <small>Parsed {{ parsed_resume.parsed_at|timesince }} ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+                
+            {% else %}
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                        <h4>No Parsed Resumes Found</h4>
+                        <p class="text-muted">
+                            No resumes have been parsed yet or none match your current filters.
+                        </p>
+                        <a href="{% url 'applications:recruiter_applications' %}" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>View Applications
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select/Deselect All functionality
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        const deselectAllBtn = document.getElementById('deselectAllBtn');
+        const checkboxes = document.querySelectorAll('.resume-checkbox');
+        
+        selectAllBtn.addEventListener('click', function() {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        });
+        
+        deselectAllBtn.addEventListener('click', function() {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        });
+        
+        // Form submission with loading state
+        const bulkActionForm = document.getElementById('bulkActionForm');
+        bulkActionForm.addEventListener('submit', function(e) {
+            const checkedBoxes = document.querySelectorAll('.resume-checkbox:checked');
+            
+            if (checkedBoxes.length === 0) {
+                e.preventDefault();
+                alert('Please select at least one resume to parse.');
+                return false;
+            }
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
+        });
+    });
+</script>
+{% endblock %}

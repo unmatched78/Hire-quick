@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Generate Job Description - RecruitPro{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-robot me-2"></i>AI Job Description Generator
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-4">Provide some basic information about the position, and our AI will generate a comprehensive job description, requirements, and benefits for you.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.job_title.id_for_label }}" class="form-label">Job Title *</label>
+                                {{ form.job_title }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.industry.id_for_label }}" class="form-label">Industry</label>
+                                {{ form.industry }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.company_description.id_for_label }}" class="form-label">Company Description</label>
+                            {{ form.company_description }}
+                            <div class="form-text">Brief description of your company and culture</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.requirements_input.id_for_label }}" class="form-label">What are you looking for? *</label>
+                            {{ form.requirements_input }}
+                            <div class="form-text">{{ form.requirements_input.help_text }}</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.experience_level.id_for_label }}" class="form-label">Experience Level</label>
+                                {{ form.experience_level }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.employment_type.id_for_label }}" class="form-label">Employment Type</label>
+                                {{ form.employment_type }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.remote_option.id_for_label }}" class="form-label">Work Arrangement</label>
+                                {{ form.remote_option }}
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'recruiter_ai:home' %}" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-magic me-2"></i>Generate Job Description
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- AI Tips -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Tips for Better Results
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Be specific about the skills and experience you're looking for</li>
+                        <li>Mention any specific technologies, tools, or methodologies</li>
+                        <li>Include information about team size or reporting structure</li>
+                        <li>Describe the main challenges or projects the person will work on</li>
+                        <li>Mention any unique aspects of your company culture</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,494 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Apply for {{ job.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .application-form {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .field-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .video-upload-area, .audio-upload-area {
+        border: 2px dashed #007bff;
+        border-radius: 0.375rem;
+        padding: 2rem;
+        text-align: center;
+        background: #f8f9ff;
+        transition: all 0.3s ease;
+    }
+    
+    .video-upload-area:hover, .audio-upload-area:hover {
+        border-color: #0056b3;
+        background: #e6f3ff;
+    }
+    
+    .file-preview {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 0.375rem;
+    }
+    
+    .rating-field {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .rating-field input[type="radio"] {
+        margin: 0 0.25rem;
+    }
+    
+    .required-field::after {
+        content: " *";
+        color: #dc3545;
+    }
+    
+    .progress-indicator {
+        margin-bottom: 2rem;
+    }
+    
+    .form-section {
+        background: white;
+        border-radius: 0.5rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="application-form">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h2>Apply for {{ job.title }}</h2>
+            <p class="text-muted">{{ job.company.name }} • {{ job.location }}</p>
+            <div class="progress-indicator">
+                <div class="progress" style="height: 4px;">
+                    <div class="progress-bar" role="progressbar" style="width: 0%" id="formProgress"></div>
+                </div>
+                <small class="text-muted mt-2 d-block">Complete all required fields to submit your application</small>
+            </div>
+        </div>
+        
+        <!-- Application Form -->
+        <form method="post" enctype="multipart/form-data" id="applicationForm">
+            {% csrf_token %}
+            
+            <!-- Job Information Section -->
+            <div class="form-section">
+                <h4 class="mb-3">
+                    <i class="fas fa-briefcase me-2 text-primary"></i>
+                    Position Details
+                </h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Job Title:</strong> {{ job.title }}</p>
+                        <p><strong>Company:</strong> {{ job.company.name }}</p>
+                        <p><strong>Location:</strong> {{ job.location }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Job Type:</strong> {{ job.get_job_type_display }}</p>
+                        <p><strong>Experience:</strong> {{ job.experience_min }}+ years</p>
+                        {% if job.salary_min %}
+                            <p><strong>Salary:</strong> {{ job.get_salary_range }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dynamic Form Fields -->
+            <div class="form-section">
+                <h4 class="mb-4">
+                    <i class="fas fa-clipboard-list me-2 text-primary"></i>
+                    Application Information
+                </h4>
+                
+                {% for field in form %}
+                    <div class="field-group">
+                        {% if field.field.widget.input_type == 'hidden' %}
+                            {{ field }}
+                        {% else %}
+                            <label class="form-label{% if field.field.required %} required-field{% endif %}">
+                                {{ field.label }}
+                            </label>
+                            
+                            {% if field.help_text %}
+                                <div class="form-text mb-2">{{ field.help_text }}</div>
+                            {% endif %}
+                            
+                            {% if 'video' in field.html_name or field.field.widget.attrs.class == 'form-control video-upload' %}
+                                <div class="video-upload-area">
+                                    <i class="fas fa-video fa-2x text-primary mb-2"></i>
+                                    <p class="mb-2">Upload your video</p>
+                                    {{ field }}
+                                    <small class="text-muted">
+                                        Supported formats: MP4, MOV, AVI (Max: 50MB, 5 minutes)
+                                    </small>
+                                </div>
+                            {% elif 'audio' in field.html_name or field.field.widget.attrs.class == 'form-control audio-upload' %}
+                                <div class="audio-upload-area">
+                                    <i class="fas fa-microphone fa-2x text-primary mb-2"></i>
+                                    <p class="mb-2">Upload your audio</p>
+                                    {{ field }}
+                                    <small class="text-muted">
+                                        Supported formats: MP3, WAV, M4A (Max: 25MB, 10 minutes)
+                                    </small>
+                                </div>
+                            {% elif field.field.widget.input_type == 'file' %}
+                                <div class="file-upload-area">
+                                    <i class="fas fa-upload me-2"></i>
+                                    {{ field }}
+                                    <small class="text-muted d-block mt-1">
+                                        Supported formats: PDF, DOC, DOCX (Max: 10MB)
+                                    </small>
+                                </div>
+                            {% elif 'rating' in field.html_name %}
+                                <div class="rating-field">
+                                    {{ field }}
+                                </div>
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Consent and Legal Section -->
+            <div class="form-section">
+                <h4 class="mb-3">
+                    <i class="fas fa-shield-alt me-2 text-primary"></i>
+                    Consent & Legal
+                </h4>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="dataConsent" required>
+                    <label class="form-check-label" for="dataConsent">
+                        I consent to the processing of my personal data for recruitment purposes
+                    </label>
+                </div>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="backgroundCheck">
+                    <label class="form-check-label" for="backgroundCheck">
+                        I consent to background verification checks if selected for this position
+                    </label>
+                </div>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="communicationConsent" checked>
+                    <label class="form-check-label" for="communicationConsent">
+                        I agree to receive communications regarding this application
+                    </label>
+                </div>
+                
+                <small class="text-muted">
+                    By submitting this application, you agree to our 
+                    <a href="#" target="_blank">Privacy Policy</a> and 
+                    <a href="#" target="_blank">Terms of Service</a>.
+                </small>
+            </div>
+            
+            <!-- Submit Section -->
+            <div class="form-section text-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'jobs:detail' job.pk %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Job
+                    </a>
+                    
+                    <div>
+                        <button type="button" class="btn btn-outline-primary me-2" id="saveAsDraftBtn">
+                            <i class="fas fa-save me-2"></i>Save as Draft
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitApplicationBtn">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Application
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-lock me-1"></i>
+                        Your information is secure and will only be shared with {{ job.company.name }}
+                    </small>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- File Preview Modal -->
+<div class="modal fade" id="filePreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">File Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="filePreviewContent">
+                <!-- File preview content -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('applicationForm');
+    const progressBar = document.getElementById('formProgress');
+    
+    // Update progress as user fills form
+    function updateProgress() {
+        const requiredFields = form.querySelectorAll('[required]');
+        const filledFields = Array.from(requiredFields).filter(field => {
+            if (field.type === 'checkbox') {
+                return field.checked;
+            } else if (field.type === 'file') {
+                return field.files.length > 0;
+            } else {
+                return field.value.trim() !== '';
+            }
+        });
+        
+        const progress = (filledFields.length / requiredFields.length) * 100;
+        progressBar.style.width = progress + '%';
+        
+        // Enable submit button when all required fields are filled
+        const submitBtn = document.getElementById('submitApplicationBtn');
+        submitBtn.disabled = progress < 100;
+    }
+    
+    // Add event listeners to all form fields
+    form.addEventListener('input', updateProgress);
+    form.addEventListener('change', updateProgress);
+    
+    // Initial progress check
+    updateProgress();
+    
+    // File upload previews
+    const fileInputs = form.querySelectorAll('input[type="file"]');
+    fileInputs.forEach(input => {
+        input.addEventListener('change', function(e) {
+            handleFileUpload(e.target);
+        });
+    });
+    
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitApplication();
+    });
+    
+    // Save as draft
+    document.getElementById('saveAsDraftBtn').addEventListener('click', function() {
+        saveAsDraft();
+    });
+});
+
+function handleFileUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    // Create preview element
+    let preview = input.parentNode.querySelector('.file-preview');
+    if (!preview) {
+        preview = document.createElement('div');
+        preview.className = 'file-preview';
+        input.parentNode.appendChild(preview);
+    }
+    
+    // File info
+    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+    const fileName = file.name;
+    
+    preview.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-file me-2"></i>
+                <strong>${fileName}</strong>
+                <small class="text-muted">(${fileSize} MB)</small>
+            </div>
+            <div>
+                ${file.type.startsWith('image/') ? 
+                    '<button type="button" class="btn btn-sm btn-outline-primary preview-btn">Preview</button>' : 
+                    ''
+                }
+                <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn">Remove</button>
+            </div>
+        </div>
+    `;
+    
+    // Add event listeners
+    const removeBtn = preview.querySelector('.remove-file-btn');
+    removeBtn.addEventListener('click', function() {
+        input.value = '';
+        preview.remove();
+        updateProgress();
+    });
+    
+    const previewBtn = preview.querySelector('.preview-btn');
+    if (previewBtn) {
+        previewBtn.addEventListener('click', function() {
+            showFilePreview(file);
+        });
+    }
+}
+
+function showFilePreview(file) {
+    const modal = new bootstrap.Modal(document.getElementById('filePreviewModal'));
+    const content = document.getElementById('filePreviewContent');
+    
+    if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            content.innerHTML = `<img src="${e.target.result}" class="img-fluid" alt="Preview">`;
+        };
+        reader.readAsDataURL(file);
+    } else if (file.type === 'application/pdf') {
+        content.innerHTML = `
+            <div class="text-center">
+                <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                <p>PDF Preview not available</p>
+                <p><strong>${file.name}</strong></p>
+            </div>
+        `;
+    } else {
+        content.innerHTML = `
+            <div class="text-center">
+                <i class="fas fa-file fa-3x text-muted mb-3"></i>
+                <p>File preview not available</p>
+                <p><strong>${file.name}</strong></p>
+            </div>
+        `;
+    }
+    
+    modal.show();
+}
+
+function submitApplication() {
+    const submitBtn = document.getElementById('submitApplicationBtn');
+    const originalText = submitBtn.innerHTML;
+    
+    // Show loading state
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+    submitBtn.disabled = true;
+    
+    // Create FormData
+    const formData = new FormData(document.getElementById('applicationForm'));
+    
+    // Submit via fetch
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        }
+        throw new Error('Network response was not ok');
+    })
+    .then(html => {
+        // Check if submission was successful (redirect or success message)
+        if (html.includes('Application submitted successfully') || response.redirected) {
+            showAlert('Application submitted successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = "{% url 'applications:my_applications' %}";
+            }, 2000);
+        } else {
+            // Parse and show form errors
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const errors = doc.querySelectorAll('.invalid-feedback');
+            
+            if (errors.length > 0) {
+                showAlert('Please correct the errors in the form', 'danger');
+                // Update form with errors
+                document.body.innerHTML = html;
+            } else {
+                showAlert('Application submitted successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = "{% url 'applications:my_applications' %}";
+                }, 2000);
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('Error submitting application. Please try again.', 'danger');
+    })
+    .finally(() => {
+        // Restore button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+}
+
+function saveAsDraft() {
+    // Implementation for saving as draft
+    showAlert('Draft saved successfully!', 'info');
+}
+
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+
+function updateProgress() {
+    const form = document.getElementById('applicationForm');
+    const progressBar = document.getElementById('formProgress');
+    const requiredFields = form.querySelectorAll('[required]');
+    
+    const filledFields = Array.from(requiredFields).filter(field => {
+        if (field.type === 'checkbox') {
+            return field.checked;
+        } else if (field.type === 'file') {
+            return field.files.length > 0;
+        } else {
+            return field.value.trim() !== '';
+        }
+    });
+    
+    const progress = requiredFields.length > 0 ? (filledFields.length / requiredFields.length) * 100 : 100;
+    progressBar.style.width = progress + '%';
+    
+    // Enable submit button when all required fields are filled
+    const submitBtn = document.getElementById('submitApplicationBtn');
+    if (submitBtn) {
+        submitBtn.disabled = progress < 100;
+    }
+}
+</script>
+{% endblock %}

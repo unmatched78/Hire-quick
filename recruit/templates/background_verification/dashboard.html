@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Background Verification Dashboard{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css" rel="stylesheet">
+<style>
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .stat-card h3 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .alert-card {
+        border-left: 4px solid #dc3545;
+        background-color: #f8f9fa;
+    }
+    .alert-card.high {
+        border-left-color: #fd7e14;
+    }
+    .alert-card.critical {
+        border-left-color: #dc3545;
+    }
+    .progress-ring {
+        width: 60px;
+        height: 60px;
+    }
+    .progress-ring circle {
+        fill: transparent;
+        stroke: #e9ecef;
+        stroke-width: 4;
+    }
+    .progress-ring .progress {
+        stroke: #28a745;
+        stroke-width: 4;
+        stroke-linecap: round;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">Background Verification Dashboard</h1>
+            <p class="text-muted">Manage and monitor background checks for your candidates</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <h3>{{ total_requests }}</h3>
+                <p class="mb-0">Total Requests</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <h3>{{ pending_requests }}</h3>
+                <p class="mb-0">Pending</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <h3>{{ completed_requests }}</h3>
+                <p class="mb-0">Completed</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <h3>{% widthratio completed_requests total_requests 100 %}%</h3>
+                <p class="mb-0">Success Rate</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Requests -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Background Check Requests</h5>
+                    <a href="{% url 'background_verification:request_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Candidate</th>
+                                        <th>Position</th>
+                                        <th>Package</th>
+                                        <th>Status</th>
+                                        <th>Progress</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in recent_requests %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm bg-primary rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                    {{ request.application.candidate.first_name|first }}{{ request.application.candidate.last_name|first }}
+                                                </div>
+                                                <div>
+                                                    <div class="fw-semibold">{{ request.application.candidate.get_full_name }}</div>
+                                                    <small class="text-muted">{{ request.candidate_email }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-semibold">{{ request.application.job.title }}</div>
+                                            <small class="text-muted">{{ request.application.job.company.name }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ request.package.name }}</span>
+                                        </td>
+                                        <td>
+                                            {% if request.status == 'completed' %}
+                                                <span class="badge bg-success">Completed</span>
+                                            {% elif request.status == 'in_progress' %}
+                                                <span class="badge bg-warning">In Progress</span>
+                                            {% elif request.status == 'pending_consent' %}
+                                                <span class="badge bg-secondary">Pending Consent</span>
+                                            {% else %}
+                                                <span class="badge bg-light text-dark">{{ request.get_status_display }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ request.get_progress_percentage }}%"></div>
+                                                </div>
+                                                <small class="text-muted">{{ request.get_progress_percentage }}%</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'background_verification:request_detail' request.request_id %}" class="btn btn-sm btn-outline-primary">View</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <h5>No Background Checks Yet</h5>
+                            <p class="text-muted">Start by creating a background check for your candidates.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts and Notifications -->
+        <div class="col-lg-4">
+            <!-- High Priority Alerts -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">High Priority Alerts</h5>
+                </div>
+                <div class="card-body">
+                    {% if alerts %}
+                        {% for alert in alerts %}
+                        <div class="alert-card card mb-2 {{ alert.severity }}">
+                            <div class="card-body py-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">{{ alert.title }}</h6>
+                                        <p class="mb-1 small">{{ alert.description|truncatechars:80 }}</p>
+                                        <small class="text-muted">{{ alert.created_at|timesince }} ago</small>
+                                    </div>
+                                    <span class="badge bg-{{ alert.severity }} ms-2">{{ alert.get_severity_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                            <p class="text-muted mb-0">No high priority alerts</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Pending Documents -->
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Pending Document Reviews</h5>
+                </div>
+                <div class="card-body">
+                    {% if pending_documents %}
+                        {% for document in pending_documents %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <div class="fw-semibold">{{ document.get_document_type_display }}</div>
+                                <small class="text-muted">{{ document.background_check.application.candidate.get_full_name }}</small>
+                            </div>
+                            <a href="{% url 'background_verification:review_document' document.id %}" class="btn btn-sm btn-outline-primary">Review</a>
+                        </div>
+                        {% if not forloop.last %}<hr class="my-2">{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-file-check fa-2x text-success mb-2"></i>
+                            <p class="text-muted mb-0">No pending documents</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="{% url 'background_verification:request_list' %}" class="btn btn-outline-primary w-100 mb-2">
+                                <i class="fas fa-list me-2"></i>View All Requests
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'background_verification:reports' %}" class="btn btn-outline-info w-100 mb-2">
+                                <i class="fas fa-chart-bar me-2"></i>View Reports
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-warning w-100 mb-2" onclick="sendBulkReminders()">
+                                <i class="fas fa-bell me-2"></i>Send Reminders
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" class="btn btn-outline-success w-100 mb-2" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Verification Settings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Default Package</label>
+                        <select class="form-control">
+                            <option>Standard Package</option>
+                            <option>Comprehensive Package</option>
+                            <option>Executive Package</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Auto-send Reminders</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="autoReminders">
+                            <label class="form-check-label" for="autoReminders">
+                                Send automatic reminders after 3 days
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Notifications</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="emailAlerts" checked>
+                            <label class="form-check-label" for="emailAlerts">
+                                Receive email alerts for high-priority findings
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Save Settings</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+function sendBulkReminders() {
+    if (confirm('Send reminder emails to all candidates with pending actions?')) {
+        // Implementation for bulk reminders
+        alert('Reminder emails sent successfully!');
+    }
+}
+
+// Initialize progress rings
+document.addEventListener('DOMContentLoaded', function() {
+    const progressRings = document.querySelectorAll('.progress-ring');
+    progressRings.forEach(ring => {
+        const circle = ring.querySelector('.progress');
+        const radius = circle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+        const progress = ring.dataset.progress || 0;
+        
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+        
+        const offset = circumference - progress / 100 * circumference;
+        circle.style.strokeDashoffset = offset;
+    });
+});
+</script>
+{% endblock %}

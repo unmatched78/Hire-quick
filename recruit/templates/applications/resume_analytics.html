@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resume Analytics Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-card {
+        border-radius: 0.5rem;
+        transition: transform 0.3s;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .skill-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        margin: 0.125rem;
+        background: #e9ecef;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+    }
+    
+    .skill-count {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: #007bff;
+        color: white;
+        font-size: 0.75rem;
+        margin-left: 0.25rem;
+    }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2>
+                <i class="fas fa-chart-bar me-2 text-primary"></i>
+                Resume Analytics Dashboard
+            </h2>
+            <p class="text-muted">
+                Insights from {{ total_parsed }} parsed resumes
+            </p>
+        </div>
+    </div>
+    
+    <!-- Key Metrics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Resumes</h5>
+                    <div class="stat-value">{{ total_parsed }}</div>
+                    <p class="card-text">Parsed resumes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Average Match</h5>
+                    <div class="stat-value">{{ avg_match_score|floatformat:1 }}%</div>
+                    <p class="card-text">Skill match score</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Average Experience</h5>
+                    <div class="stat-value">{{ avg_experience|floatformat:1 }}</div>
+                    <p class="card-text">Years of experience</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">High Matches</h5>
+                    <div class="stat-value">{{ match_ranges.80-100% }}</div>
+                    <p class="card-text">80%+ match score</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts -->
+    <div class="row mb-4">
+        <!-- Match Score Distribution -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-bullseye me-2"></i>Match Score Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="matchScoreChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Experience Distribution -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-briefcase me-2"></i>Experience Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="experienceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Skills Analysis -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5><i class="fas fa-cogs me-2"></i>Top Skills by Category</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for category, skills in top_skills.items %}
+                    <div class="col-md-4 mb-4">
+                        <h6 class="text-primary">{{ category|title|replace:"_":" " }}</h6>
+                        <div>
+                            {% for skill, count in skills %}
+                                <span class="skill-badge">
+                                    {{ skill }}
+                                    <span class="skill-count">{{ count }}</span>
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Candidate Pool Analysis -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-users me-2"></i>Candidate Pool Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="candidatePoolChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-graduation-cap me-2"></i>Education Level Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted text-center">
+                        Education level data is not available in the current dataset.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Match Score Distribution Chart
+        const matchScoreCtx = document.getElementById('matchScoreChart').getContext('2d');
+        const matchScoreChart = new Chart(matchScoreCtx, {
+            type: 'pie',
+            data: {
+                labels: ['80-100%', '60-79%', '40-59%', '0-39%'],
+                datasets: [{
+                    data: [
+                        {{ match_ranges.80-100% }},
+                        {{ match_ranges.60-79% }},
+                        {{ match_ranges.40-59% }},
+                        {{ match_ranges.0-39% }}
+                    ],
+                    backgroundColor: [
+                        '#28a745',
+                        '#ffc107',
+                        '#fd7e14',
+                        '#dc3545'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Match Score Distribution'
+                    }
+                }
+            }
+        });
+        
+        // Experience Distribution Chart
+        const experienceCtx = document.getElementById('experienceChart').getContext('2d');
+        const experienceChart = new Chart(experienceCtx, {
+            type: 'bar',
+            data: {
+                labels: ['0-2 years', '2-5 years', '5-10 years', '10+ years'],
+                datasets: [{
+                    label: 'Number of Candidates',
+                    data: [
+                        {{ experience_ranges.0-2 years }},
+                        {{ experience_ranges.2-5 years }},
+                        {{ experience_ranges.5-10 years }},
+                        {{ experience_ranges.10+ years }}
+                    ],
+                    backgroundColor: '#007bff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Candidates'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Years of Experience'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Experience Distribution'
+                    }
+                }
+            }
+        });
+        
+        // Candidate Pool Chart (Dummy data for now)
+        const candidatePoolCtx = document.getElementById('candidatePoolChart').getContext('2d');
+        const candidatePoolChart = new Chart(candidatePoolCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Technical Skills', 'Experience', 'Education', 'Communication', 'Leadership', 'Cultural Fit'],
+                datasets: [{
+                    label: 'Average Candidate',
+                    data: [65, 75, 70, 60, 55, 80],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    pointBackgroundColor: 'rgb(54, 162, 235)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(54, 162, 235)'
+                }, {
+                    label: 'Ideal Candidate',
+                    data: [90, 85, 80, 85, 75, 90],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    pointBackgroundColor: 'rgb(255, 99, 132)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(255, 99, 132)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Candidate Pool vs. Ideal Candidate'
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

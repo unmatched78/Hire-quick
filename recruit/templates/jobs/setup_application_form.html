@@ -1,0 +1,483 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Setup Application Form - {{ job.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.css">
+<style>
+    .field-preview {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        cursor: move;
+    }
+    
+    .field-preview:hover {
+        background: #e9ecef;
+    }
+    
+    .sortable-ghost {
+        opacity: 0.4;
+    }
+    
+    .field-type-options {
+        display: none;
+    }
+    
+    .field-type-options.show {
+        display: block;
+    }
+    
+    .video-upload, .audio-upload {
+        border: 2px dashed #007bff;
+        border-radius: 0.375rem;
+        padding: 2rem;
+        text-align: center;
+        background: #f8f9ff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-0">Setup Application Form</h4>
+                        <small class="text-muted">{{ job.title }} at {{ job.company.name }}</small>
+                    </div>
+                    <div>
+                        <a href="{% url 'jobs:detail' job.pk %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Job
+                        </a>
+                        <button class="btn btn-success" id="previewFormBtn">
+                            <i class="fas fa-eye me-2"></i>Preview Form
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Add New Field Panel -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Add New Field</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="addFieldForm">
+                                        {% csrf_token %}
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Field Type</label>
+                                            <select name="field_type" class="form-control field-type-select" required>
+                                                <option value="">Select field type...</option>
+                                                <optgroup label="Text Fields">
+                                                    <option value="text">Short Text</option>
+                                                    <option value="textarea">Long Text</option>
+                                                    <option value="email">Email</option>
+                                                    <option value="phone">Phone Number</option>
+                                                    <option value="number">Number</option>
+                                                    <option value="date">Date</option>
+                                                    <option value="url">Website/Portfolio URL</option>
+                                                </optgroup>
+                                                <optgroup label="File Uploads">
+                                                    <option value="file">File Upload</option>
+                                                    <option value="resume">Resume Upload</option>
+                                                    <option value="cover_letter">Cover Letter</option>
+                                                    <option value="video">Video Upload</option>
+                                                    <option value="audio">Audio Upload</option>
+                                                    <option value="portfolio">Portfolio Upload</option>
+                                                </optgroup>
+                                                <optgroup label="Selection Fields">
+                                                    <option value="select">Dropdown Selection</option>
+                                                    <option value="radio">Multiple Choice</option>
+                                                    <option value="checkbox">Checkboxes</option>
+                                                    <option value="boolean">Yes/No Question</option>
+                                                    <option value="rating">Rating Scale</option>
+                                                </optgroup>
+                                                <optgroup label="Social Profiles">
+                                                    <option value="linkedin">LinkedIn Profile</option>
+                                                    <option value="github">GitHub Profile</option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Field Label/Question</label>
+                                            <input type="text" name="label" class="form-control" 
+                                                   placeholder="Enter the question or field label" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Help Text (Optional)</label>
+                                            <textarea name="help_text" class="form-control" rows="2" 
+                                                      placeholder="Additional instructions for applicants"></textarea>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Placeholder (Optional)</label>
+                                            <input type="text" name="placeholder" class="form-control" 
+                                                   placeholder="Placeholder text">
+                                        </div>
+                                        
+                                        <div class="form-check mb-3">
+                                            <input type="checkbox" name="is_required" class="form-check-input" 
+                                                   id="isRequired" checked>
+                                            <label class="form-check-label" for="isRequired">
+                                                Required Field
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Options for select/radio/checkbox fields -->
+                                        <div class="field-type-options" id="choicesOptions">
+                                            <div class="mb-3">
+                                                <label class="form-label">Options</label>
+                                                <textarea name="choices_text" class="form-control" rows="3" 
+                                                          placeholder="Enter each option on a new line"></textarea>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- File upload options -->
+                                        <div class="field-type-options" id="fileOptions">
+                                            <div class="mb-3">
+                                                <label class="form-label">Max File Size (MB)</label>
+                                                <input type="number" name="max_file_size_mb" class="form-control" 
+                                                       value="10" min="1" max="100">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Allowed File Types</label>
+                                                <input type="text" name="allowed_file_types_text" class="form-control" 
+                                                       placeholder="pdf, doc, docx, jpg, png">
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Video/Audio options -->
+                                        <div class="field-type-options" id="mediaOptions">
+                                            <div class="mb-3">
+                                                <label class="form-label">Max Duration (Minutes)</label>
+                                                <input type="number" name="max_duration_minutes" class="form-control" 
+                                                       value="5" min="1" max="60">
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Rating options -->
+                                        <div class="field-type-options" id="ratingOptions">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label class="form-label">Min Rating</label>
+                                                    <input type="number" name="min_rating" class="form-control" 
+                                                           value="1" min="1" max="10">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label">Max Rating</label>
+                                                    <input type="number" name="max_rating" class="form-control" 
+                                                           value="5" min="1" max="10">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-plus me-2"></i>Add Field
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Current Fields Panel -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Application Form Fields</h5>
+                                    <small class="text-muted">Drag to reorder</small>
+                                </div>
+                                <div class="card-body">
+                                    <div id="formFieldsList">
+                                        {% if existing_fields %}
+                                            {% for field in existing_fields %}
+                                                <div class="field-preview" data-field-id="{{ field.id }}">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <i class="fas fa-grip-vertical me-2 text-muted"></i>
+                                                            <strong>{{ field.label }}</strong>
+                                                            {% if field.is_required %}
+                                                                <span class="badge bg-danger ms-2">Required</span>
+                                                            {% endif %}
+                                                            <div class="text-muted small">{{ field.get_field_type_display }}</div>
+                                                            {% if field.help_text %}
+                                                                <div class="text-muted small">{{ field.help_text }}</div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-sm btn-outline-primary edit-field-btn" 
+                                                                    data-field-id="{{ field.id }}">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-danger delete-field-btn" 
+                                                                    data-field-id="{{ field.id }}">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="text-center py-5" id="emptyState">
+                                                <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                                                <h5 class="text-muted">No custom fields added yet</h5>
+                                                <p class="text-muted">Add custom fields to collect specific information from applicants</p>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Application Form Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="previewContent">
+                <!-- Preview content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize sortable
+    const formFieldsList = document.getElementById('formFieldsList');
+    if (formFieldsList) {
+        new Sortable(formFieldsList, {
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: function(evt) {
+                updateFieldOrder();
+            }
+        });
+    }
+    
+    // Field type change handler
+    const fieldTypeSelect = document.querySelector('.field-type-select');
+    fieldTypeSelect.addEventListener('change', function() {
+        showFieldTypeOptions(this.value);
+    });
+    
+    // Add field form submission
+    const addFieldForm = document.getElementById('addFieldForm');
+    addFieldForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        addNewField();
+    });
+    
+    // Delete field handlers
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.delete-field-btn')) {
+            const fieldId = e.target.closest('.delete-field-btn').dataset.fieldId;
+            deleteField(fieldId);
+        }
+    });
+    
+    // Preview form handler
+    document.getElementById('previewFormBtn').addEventListener('click', function() {
+        previewForm();
+    });
+});
+
+function showFieldTypeOptions(fieldType) {
+    // Hide all options
+    document.querySelectorAll('.field-type-options').forEach(el => {
+        el.classList.remove('show');
+    });
+    
+    // Show relevant options
+    if (['select', 'radio', 'checkbox'].includes(fieldType)) {
+        document.getElementById('choicesOptions').classList.add('show');
+    }
+    
+    if (['file', 'resume', 'portfolio'].includes(fieldType)) {
+        document.getElementById('fileOptions').classList.add('show');
+    }
+    
+    if (['video', 'audio'].includes(fieldType)) {
+        document.getElementById('mediaOptions').classList.add('show');
+    }
+    
+    if (fieldType === 'rating') {
+        document.getElementById('ratingOptions').classList.add('show');
+    }
+}
+
+function addNewField() {
+    const formData = new FormData(document.getElementById('addFieldForm'));
+    
+    fetch(`{% url 'jobs:add_application_form_field' job.pk %}`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Add new field to the list
+            const emptyState = document.getElementById('emptyState');
+            if (emptyState) {
+                emptyState.remove();
+            }
+            
+            const fieldsList = document.getElementById('formFieldsList');
+            fieldsList.insertAdjacentHTML('beforeend', data.field_html);
+            
+            // Reset form
+            document.getElementById('addFieldForm').reset();
+            document.querySelectorAll('.field-type-options').forEach(el => {
+                el.classList.remove('show');
+            });
+            
+            // Show success message
+            showAlert('Field added successfully!', 'success');
+        } else {
+            showAlert('Error adding field: ' + JSON.stringify(data.errors), 'danger');
+        }
+    })
+    .catch(error => {
+        showAlert('Error adding field', 'danger');
+        console.error('Error:', error);
+    });
+}
+
+function deleteField(fieldId) {
+    if (!confirm('Are you sure you want to delete this field?')) {
+        return;
+    }
+    
+    fetch(`{% url 'jobs:delete_application_form_field' job.pk 0 %}`.replace('0', fieldId), {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.querySelector(`[data-field-id="${fieldId}"]`).remove();
+            showAlert('Field deleted successfully!', 'success');
+            
+            // Show empty state if no fields left
+            const fieldsList = document.getElementById('formFieldsList');
+            if (fieldsList.children.length === 0) {
+                fieldsList.innerHTML = `
+                    <div class="text-center py-5" id="emptyState">
+                        <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No custom fields added yet</h5>
+                        <p class="text-muted">Add custom fields to collect specific information from applicants</p>
+                    </div>
+                `;
+            }
+        } else {
+            showAlert('Error deleting field', 'danger');
+        }
+    })
+    .catch(error => {
+        showAlert('Error deleting field', 'danger');
+        console.error('Error:', error);
+    });
+}
+
+function updateFieldOrder() {
+    const fieldIds = Array.from(document.querySelectorAll('.field-preview')).map(el => 
+        el.dataset.fieldId
+    );
+    
+    const formData = new FormData();
+    fieldIds.forEach(id => formData.append('field_ids[]', id));
+    
+    fetch(`{% url 'jobs:reorder_application_form_fields' job.pk %}`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('Field order updated!', 'success');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating order:', error);
+    });
+}
+
+function previewForm() {
+    // This would load a preview of the application form
+    const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+    document.getElementById('previewContent').innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading form preview...</p>
+        </div>
+    `;
+    modal.show();
+    
+    // Load actual preview content
+    fetch(`{% url 'jobs:detail' job.pk %}`)
+    .then(response => response.text())
+    .then(html => {
+        // Extract and show form preview
+        document.getElementById('previewContent').innerHTML = `
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                This is how the application form will appear to candidates
+            </div>
+            <div class="border rounded p-3">
+                <h5>Application for: {{ job.title }}</h5>
+                <p class="text-muted">{{ job.company.name }}</p>
+                <hr>
+                <p><em>Form preview would be rendered here based on the custom fields</em></p>
+            </div>
+        `;
+    });
+}
+
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.row'));
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+</script>
+{% endblock %}

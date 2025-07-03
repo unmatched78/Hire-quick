@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+
+{% block title %}Recruiter Dashboard - RecruitPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-card {
+        transition: transform 0.2s;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+    }
+    .stat-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .stat-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+    .stat-warning { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .stat-info { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    
+    .application-card {
+        border-left: 4px solid #dee2e6;
+        transition: all 0.2s;
+    }
+    .application-card:hover {
+        border-left-color: var(--primary-color);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .status-applied { border-left-color: #6c757d; }
+    .status-screening { border-left-color: #ffc107; }
+    .status-interview { border-left-color: #17a2b8; }
+    .status-offer { border-left-color: #28a745; }
+    .status-hired { border-left-color: #28a745; }
+    .status-rejected { border-left-color: #dc3545; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-1">Welcome back, {{ recruiter_profile.get_full_name }}!</h1>
+                    <p class="text-muted mb-0">{{ recruiter_profile.title }} at {{ recruiter_profile.company.name }}</p>
+                </div>
+                <div>
+                    <a href="{% url 'jobs:create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Post New Job
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon stat-primary me-3">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div>
+                            <h3 class="mb-0">{{ stats.active_jobs }}</h3>
+                            <p class="text-muted mb-0">Active Jobs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon stat-success me-3">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="mb-0">{{ stats.total_applications }}</h3>
+                            <p class="text-muted mb-0">Total Applications</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon stat-warning me-3">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h3 class="mb-0">{{ stats.pending_applications }}</h3>
+                            <p class="text-muted mb-0">Pending Review</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card dashboard-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon stat-info me-3">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="mb-0">{{ stats.interviews_this_week }}</h3>
+                            <p class="text-muted mb-0">Interviews This Week</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Recent Applications -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-alt me-2"></i>Recent Applications
+                    </h5>
+                    <a href="{% url 'applications:recruiter_applications' %}" class="btn btn-sm btn-outline-primary">
+                        View All
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_applications %}
+                        {% for application in recent_applications %}
+                        <div class="application-card p-3 border-bottom status-{{ application.status }}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">
+                                        <a href="{% url 'applications:detail' application.pk %}" class="text-decoration-none">
+                                            {{ application.candidate.get_full_name }}
+                                        </a>
+                                    </h6>
+                                    <p class="text-muted mb-1">
+                                        Applied for: <strong>{{ application.job.title }}</strong>
+                                    </p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>{{ application.applied_at|timesince }} ago
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-{{ application.get_status_badge_class }} mb-2">
+                                        {{ application.get_status_display }}
+                                    </span>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'applications:detail' application.pk %}" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'applications:update_status' application.pk %}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5>No applications yet</h5>
+                            <p class="text-muted">Applications will appear here once candidates start applying to your jobs.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Upcoming Interviews -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-calendar-check me-2"></i>Upcoming Interviews
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_interviews %}
+                        {% for interview in upcoming_interviews %}
+                        <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{ interview.application.candidate.get_full_name }}</h6>
+                                <p class="text-muted mb-1 small">{{ interview.application.job.title }}</p>
+                                <small class="text-primary">
+                                    <i class="fas fa-clock me-1"></i>{{ interview.scheduled_at|date:"M d, g:i A" }}
+                                </small>
+                            </div>
+                            <div>
+                                <a href="{% url 'applications:interview_detail' interview.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-calendar fa-2x text-muted mb-2"></i>
+                            <p class="text-muted mb-0">No upcoming interviews</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Your Jobs -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-briefcase me-2"></i>Your Active Jobs
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if jobs %}
+                        {% for job in jobs %}
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                            <div>
+                                <h6 class="mb-1">
+                                    <a href="{% url 'jobs:detail' job.pk %}" class="text-decoration-none">{{ job.title }}</a>
+                                </h6>
+                                <small class="text-muted">
+                                    <i class="fas fa-eye me-1"></i>{{ job.get_applications_count }} applications
+                                </small>
+                            </div>
+                            <div>
+                                <span class="badge bg-{% if job.status == 'active' %}success{% else %}secondary{% endif %}">
+                                    {{ job.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="text-center">
+                            <a href="{% url 'jobs:list' %}?recruiter={{ request.user.pk }}" class="btn btn-sm btn-outline-primary">
+                                View All Jobs
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-plus-circle fa-2x text-muted mb-2"></i>
+                            <p class="text-muted mb-2">No jobs posted yet</p>
+                            <a href="{% url 'jobs:create' %}" class="btn btn-sm btn-primary">
+                                Post Your First Job
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'jobs:create' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-plus me-2"></i>Post New Job
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'applications:recruiter_applications' %}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-file-alt me-2"></i>Review Applications
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'companies:detail' recruiter_profile.company.pk %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-building me-2"></i>Company Profile
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-user-edit me-2"></i>Edit Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

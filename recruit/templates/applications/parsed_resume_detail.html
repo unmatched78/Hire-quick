@@ -1,0 +1,619 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Parsed Resume - {{ parsed_resume.full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .skill-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        margin: 0.125rem;
+        background: #e9ecef;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+    }
+    
+    .skill-category {
+        margin-bottom: 1.5rem;
+    }
+    
+    .match-score {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    
+    .experience-item {
+        border-left: 3px solid #007bff;
+        padding-left: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .ai-insight {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+    }
+    
+    .progress-ring {
+        transform: rotate(-90deg);
+    }
+    
+    .progress-ring-circle {
+        transition: stroke-dashoffset 0.35s;
+        transform-origin: 50% 50%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>
+                <i class="fas fa-file-alt me-2 text-primary"></i>
+                Parsed Resume Analysis
+            </h2>
+            <p class="text-muted">
+                {{ parsed_resume.full_name }} • Applied for {{ application.job.title }}
+            </p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'applications:detail' application.pk %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Application
+            </a>
+        </div>
+    </div>
+    
+    <!-- Key Metrics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="match-score text-primary">{{ parsed_resume.skill_match_percentage|floatformat:1 }}%</div>
+                    <small class="text-muted">Skill Match</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="match-score text-success">{{ parsed_resume.total_experience_years|floatformat:1 }}</div>
+                    <small class="text-muted">Years Experience</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="match-score text-info">{{ parsed_resume.ai_score|default:"N/A" }}</div>
+                    <small class="text-muted">AI Score</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="match-score text-warning">{{ parsed_resume.career_level|default:"Unknown" }}</div>
+                    <small class="text-muted">Career Level</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-8">
+            <!-- Contact Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-address-card me-2"></i>Contact Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% if parsed_resume.full_name %}
+                                <p><strong>Name:</strong> {{ parsed_resume.full_name }}</p>
+                            {% endif %}
+                            {% if parsed_resume.email %}
+                                <p><strong>Email:</strong> 
+                                    <a href="mailto:{{ parsed_resume.email }}">{{ parsed_resume.email }}</a>
+                                </p>
+                            {% endif %}
+                            {% if parsed_resume.phone %}
+                                <p><strong>Phone:</strong> 
+                                    <a href="tel:{{ parsed_resume.phone }}">{{ parsed_resume.phone }}</a>
+                                </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            {% if parsed_resume.linkedin_url %}
+                                <p><strong>LinkedIn:</strong> 
+                                    <a href="{{ parsed_resume.linkedin_url }}" target="_blank">
+                                        <i class="fab fa-linkedin me-1"></i>Profile
+                                    </a>
+                                </p>
+                            {% endif %}
+                            {% if parsed_resume.github_url %}
+                                <p><strong>GitHub:</strong> 
+                                    <a href="{{ parsed_resume.github_url }}" target="_blank">
+                                        <i class="fab fa-github me-1"></i>Profile
+                                    </a>
+                                </p>
+                            {% endif %}
+                            {% if parsed_resume.website_url %}
+                                <p><strong>Website:</strong> 
+                                    <a href="{{ parsed_resume.website_url }}" target="_blank">
+                                        <i class="fas fa-globe me-1"></i>Portfolio
+                                    </a>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Skills Analysis -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-cogs me-2"></i>Skills Analysis</h5>
+                    <span class="badge bg-primary">{{ parsed_resume.get_all_skills|length }} Total Skills</span>
+                </div>
+                <div class="card-body">
+                    {% for category, skills in parsed_resume.skills_data.items %}
+                        <div class="skill-category">
+                            <h6 class="text-primary">{{ category|title|replace:"_":" " }}</h6>
+                            <div>
+                                {% for skill in skills %}
+                                    <span class="skill-badge 
+                                        {% if skill in parsed_resume.matched_skills %}bg-success text-white{% endif %}">
+                                        {{ skill }}
+                                        {% if skill in parsed_resume.matched_skills %}
+                                            <i class="fas fa-check ms-1"></i>
+                                        {% endif %}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No skills detected</p>
+                    {% endfor %}
+                    
+                    <!-- Skill Match Analysis -->
+                    <div class="mt-4">
+                        <h6 class="text-primary">Job Requirements Match</h6>
+                        <div class="progress mb-3" style="height: 20px;">
+                            <div class="progress-bar" role="progressbar" 
+                                style="width: {{ parsed_resume.skill_match_percentage }}%;" 
+                                aria-valuenow="{{ parsed_resume.skill_match_percentage }}" 
+                                aria-valuemin="0" aria-valuemax="100">
+                                {{ parsed_resume.skill_match_percentage|floatformat:1 }}%
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-success">Matched Skills ({{ parsed_resume.matched_skills|length }})</h6>
+                                <ul class="list-unstyled">
+                                    {% for skill in parsed_resume.matched_skills %}
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>{{ skill }}</li>
+                                    {% empty %}
+                                        <li class="text-muted">No matched skills</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-danger">Missing Skills ({{ parsed_resume.missing_skills|length }})</h6>
+                                <ul class="list-unstyled">
+                                    {% for skill in parsed_resume.missing_skills %}
+                                        <li><i class="fas fa-times-circle text-danger me-2"></i>{{ skill }}</li>
+                                    {% empty %}
+                                        <li class="text-muted">No missing skills</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Work Experience -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-briefcase me-2"></i>Work Experience</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">
+                        <strong>Total Experience:</strong> 
+                        {{ parsed_resume.total_experience_years|floatformat:1 }} years
+                    </p>
+                    
+                    {% for exp in parsed_resume.experience_data %}
+                        <div class="experience-item">
+                            <h6 class="fw-bold">{{ exp.job_title }}</h6>
+                            <p class="mb-1">
+                                <strong>{{ exp.company }}</strong>
+                                <span class="text-muted ms-2">
+                                    {{ exp.start_date }} - {{ exp.end_date }}
+                                    {% if exp.duration %}({{ exp.duration }}){% endif %}
+                                </span>
+                            </p>
+                            <p class="text-muted">{{ exp.description }}</p>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No work experience detected</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Education -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-graduation-cap me-2"></i>Education</h5>
+                </div>
+                <div class="card-body">
+                    {% for edu in parsed_resume.education_data %}
+                        <div class="mb-3">
+                            <h6 class="fw-bold">
+                                {{ edu.degree }}
+                                {% if edu.field %} in {{ edu.field }}{% endif %}
+                            </h6>
+                            <p class="mb-1">
+                                <strong>{{ edu.institution }}</strong>
+                                {% if edu.year %}<span class="text-muted ms-2">{{ edu.year }}</span>{% endif %}
+                            </p>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No education history detected</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Certifications -->
+            {% if parsed_resume.certifications_data %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-certificate me-2"></i>Certifications</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for cert in parsed_resume.certifications_data %}
+                            <li class="mb-2">
+                                <i class="fas fa-award text-warning me-2"></i>
+                                {{ cert.name }}
+                                {% if cert.issuer %}<span class="text-muted">from {{ cert.issuer }}</span>{% endif %}
+                                {% if cert.year %}<span class="text-muted">({{ cert.year }})</span>{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Languages -->
+            {% if parsed_resume.languages_data %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-language me-2"></i>Languages</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for lang in parsed_resume.languages_data %}
+                            <li class="mb-2">
+                                <strong>{{ lang.language }}</strong>
+                                {% if lang.proficiency %}<span class="text-muted ms-2">{{ lang.proficiency }}</span>{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Right Column -->
+        <div class="col-md-4">
+            <!-- AI Insights -->
+            {% if parsed_resume.ai_score %}
+            <div class="card mb-4 ai-insight">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-robot me-2"></i>AI Insights
+                    </h5>
+                    
+                    <div class="text-center mb-4">
+                        <svg width="120" height="120" class="mx-auto">
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#ffffff33" stroke-width="10" />
+                            <circle class="progress-ring-circle" cx="60" cy="60" r="50" fill="none" 
+                                stroke="#ffffff" stroke-width="10" 
+                                stroke-dasharray="314.16" 
+                                stroke-dashoffset="{{ 314.16|subtract:parsed_resume.ai_score|multiply:31.416 }}" />
+                            <text x="60" y="65" text-anchor="middle" fill="white" font-size="24" font-weight="bold">
+                                {{ parsed_resume.ai_score|floatformat:1 }}
+                            </text>
+                        </svg>
+                    </div>
+                    
+                    <h6>Key Strengths</h6>
+                    <ul>
+                        {% for strength in parsed_resume.ai_strengths %}
+                            <li>{{ strength }}</li>
+                        {% empty %}
+                            <li>No strengths identified</li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <h6>Areas for Improvement</h6>
+                    <ul>
+                        {% for improvement in parsed_resume.ai_improvements %}
+                            <li>{{ improvement }}</li>
+                        {% empty %}
+                            <li>No improvements identified</li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <h6>Suitable Roles</h6>
+                    <ul>
+                        {% for role in parsed_resume.ai_suitable_roles %}
+                            <li>{{ role }}</li>
+                        {% empty %}
+                            <li>No suitable roles identified</li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <p class="mt-3 mb-0">
+                        <strong>Career Level:</strong> {{ parsed_resume.career_level|default:"Not specified" }}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Job Match -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-bullseye me-2"></i>Job Match</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="display-4 fw-bold 
+                            {% if parsed_resume.skill_match_percentage >= 80 %}text-success
+                            {% elif parsed_resume.skill_match_percentage >= 60 %}text-warning
+                            {% else %}text-danger{% endif %}">
+                            {{ parsed_resume.skill_match_percentage|floatformat:1 }}%
+                        </div>
+                        <p class="text-muted">Match Score</p>
+                    </div>
+                    
+                    <div class="progress mb-4" style="height: 10px;">
+                        <div class="progress-bar 
+                            {% if parsed_resume.skill_match_percentage >= 80 %}bg-success
+                            {% elif parsed_resume.skill_match_percentage >= 60 %}bg-warning
+                            {% else %}bg-danger{% endif %}" 
+                            role="progressbar" 
+                            style="width: {{ parsed_resume.skill_match_percentage }}%;" 
+                            aria-valuenow="{{ parsed_resume.skill_match_percentage }}" 
+                            aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-center">
+                            <div class="h5">{{ parsed_resume.matched_skills|length }}</div>
+                            <small class="text-muted">Matched Skills</small>
+                        </div>
+                        <div class="text-center">
+                            <div class="h5">{{ parsed_resume.missing_skills|length }}</div>
+                            <small class="text-muted">Missing Skills</small>
+                        </div>
+                        <div class="text-center">
+                            <div class="h5">{{ parsed_resume.get_all_skills|length }}</div>
+                            <small class="text-muted">Total Skills</small>
+                        </div>
+                    </div>
+                    
+                    <div class="alert 
+                        {% if parsed_resume.skill_match_percentage >= 80 %}alert-success
+                        {% elif parsed_resume.skill_match_percentage >= 60 %}alert-warning
+                        {% else %}alert-danger{% endif %} mb-0">
+                        {% if parsed_resume.skill_match_percentage >= 80 %}
+                            <i class="fas fa-check-circle me-2"></i>Strong match for this position
+                        {% elif parsed_resume.skill_match_percentage >= 60 %}
+                            <i class="fas fa-exclamation-circle me-2"></i>Potential match with some gaps
+                        {% else %}
+                            <i class="fas fa-times-circle me-2"></i>Significant skill gaps for this role
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-tasks me-2"></i>Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'applications:detail' application.pk %}" class="btn btn-outline-primary">
+                            <i class="fas fa-file-alt me-2"></i>View Full Application
+                        </a>
+                        
+                        {% if request.user.user_type == 'recruiter' %}
+                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#scheduleInterviewModal">
+                                <i class="fas fa-calendar-alt me-2"></i>Schedule Interview
+                            </button>
+                            
+                            <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateStatusModal">
+                                <i class="fas fa-exchange-alt me-2"></i>Update Status
+                            </button>
+                            
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addNotesModal">
+                                <i class="fas fa-sticky-note me-2"></i>Add Notes
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Original Resume -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-file-pdf me-2"></i>Original Resume</h5>
+                </div>
+                <div class="card-body">
+                    {% if application.resume %}
+                        <a href="{{ application.resume.url }}" class="btn btn-primary w-100" target="_blank">
+                            <i class="fas fa-download me-2"></i>Download Resume
+                        </a>
+                    {% else %}
+                        {% for file in application.uploaded_files.all %}
+                            {% if file.is_resume or file.is_document %}
+                                <a href="{{ file.file.url }}" class="btn btn-primary w-100" target="_blank">
+                                    <i class="fas fa-download me-2"></i>Download Resume
+                                </a>
+                                {% break %}
+                            {% endif %}
+                        {% empty %}
+                            <p class="text-muted">No resume file available</p>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% if parsed_resume.raw_text %}
+                        <div class="mt-3">
+                            <button class="btn btn-sm btn-outline-secondary w-100" type="button" 
+                                data-bs-toggle="collapse" data-bs-target="#rawTextCollapse">
+                                <i class="fas fa-eye me-1"></i>View Raw Text
+                            </button>
+                            <div class="collapse mt-2" id="rawTextCollapse">
+                                <div class="card card-body">
+                                    <pre class="text-muted" style="white-space: pre-wrap;">{{ parsed_resume.raw_text }}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+{% if request.user.user_type == 'recruiter' %}
+    <!-- Schedule Interview Modal -->
+    <div class="modal fade" id="scheduleInterviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule Interview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'applications:schedule_interview' application.pk %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="interview_type" class="form-label">Interview Type</label>
+                            <select class="form-select" id="interview_type" name="interview_type" required>
+                                <option value="phone">Phone Interview</option>
+                                <option value="video">Video Interview</option>
+                                <option value="in-person">In-Person Interview</option>
+                                <option value="technical">Technical Interview</option>
+                                <option value="final">Final Interview</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="scheduled_at" class="form-label">Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="scheduled_at" name="scheduled_at" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="duration_minutes" class="form-label">Duration (minutes)</label>
+                            <input type="number" class="form-control" id="duration_minutes" name="duration_minutes" value="60" min="15" step="15" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location / Meeting Link</label>
+                            <input type="text" class="form-control" id="location" name="location">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Schedule Interview</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Update Status Modal -->
+    <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Application Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'applications:update_status' application.pk %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="status" class="form-label">New Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="applied" {% if application.status == 'applied' %}selected{% endif %}>Applied</option>
+                                <option value="screening" {% if application.status == 'screening' %}selected{% endif %}>Under Review</option>
+                                <option value="interview" {% if application.status == 'interview' %}selected{% endif %}>Interview Scheduled</option>
+                                <option value="offer" {% if application.status == 'offer' %}selected{% endif %}>Offer Extended</option>
+                                <option value="hired" {% if application.status == 'hired' %}selected{% endif %}>Hired</option>
+                                <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                <option value="withdrawn" {% if application.status == 'withdrawn' %}selected{% endif %}>Withdrawn</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Status</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Notes Modal -->
+    <div class="modal fade" id="addNotesModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Notes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'applications:add_notes' application.pk %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="5" required>{{ application.notes }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Notes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+{% endblock %}

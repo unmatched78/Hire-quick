@@ -1,0 +1,386 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Job Matches - RecruitPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .match-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-left: 4px solid #dee2e6;
+    }
+    .match-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .match-card.high-match {
+        border-left-color: #28a745;
+    }
+    .match-card.medium-match {
+        border-left-color: #ffc107;
+    }
+    .match-card.low-match {
+        border-left-color: #dc3545;
+    }
+    .match-score {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    .skill-badge {
+        font-size: 0.75rem;
+        margin: 0.125rem;
+    }
+    .preferences-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-0">
+                <i class="fas fa-bullseye me-2"></i>Your Job Matches
+            </h1>
+            <p class="text-muted">Personalized job recommendations based on your profile</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'talent_pool:update_preferences' %}" class="btn btn-outline-primary">
+                <i class="fas fa-cog me-2"></i>Update Preferences
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-chart-pie fa-2x text-primary mb-2"></i>
+                    <h4>{{ stats.total_matches }}</h4>
+                    <small class="text-muted">Total Matches</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-eye fa-2x text-info mb-2"></i>
+                    <h4>{{ stats.viewed_matches }}</h4>
+                    <small class="text-muted">Viewed</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-heart fa-2x text-success mb-2"></i>
+                    <h4>{{ stats.applied_matches }}</h4>
+                    <small class="text-muted">Applied</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                    <h4>{{ stats.pending_matches }}</h4>
+                    <small class="text-muted">Pending</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-md-3">
+            <!-- Preferences Card -->
+            <div class="card preferences-card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-user-cog me-2"></i>Your Preferences
+                    </h5>
+                    {% if preferences %}
+                    <div class="mb-2">
+                        <small class="opacity-75">Job Types:</small>
+                        <div>
+                            {% for job_type in preferences.job_types %}
+                            <span class="badge bg-light text-dark me-1">{{ job_type }}</span>
+                            {% empty %}
+                            <span class="text-light opacity-75">Not specified</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <small class="opacity-75">Remote:</small>
+                        <span class="badge bg-light text-dark">{{ preferences.get_remote_preference_display }}</span>
+                    </div>
+                    {% if preferences.min_salary %}
+                    <div class="mb-2">
+                        <small class="opacity-75">Salary:</small>
+                        <span class="badge bg-light text-dark">${{ preferences.min_salary|floatformat:0 }}{% if preferences.max_salary %} - ${{ preferences.max_salary|floatformat:0 }}{% else %}+{% endif %}</span>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <p class="mb-0">Set your preferences to get better matches!</p>
+                    {% endif %}
+                    <a href="{% url 'talent_pool:update_preferences' %}" class="btn btn-light btn-sm mt-2">
+                        <i class="fas fa-edit me-1"></i>Update
+                    </a>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-filter me-2"></i>Filters
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form method="get">
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select form-select-sm">
+                                <option value="">All Statuses</option>
+                                <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="viewed" {% if request.GET.status == 'viewed' %}selected{% endif %}>Viewed</option>
+                                <option value="interested" {% if request.GET.status == 'interested' %}selected{% endif %}>Interested</option>
+                                <option value="applied" {% if request.GET.status == 'applied' %}selected{% endif %}>Applied</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Min Match Score</label>
+                            <input type="number" name="min_score" class="form-control form-control-sm" 
+                                   min="0" max="100" value="{{ request.GET.min_score }}" placeholder="0-100">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                            <i class="fas fa-search me-1"></i>Apply Filters
+                        </button>
+                        <a href="{% url 'talent_pool:candidate_matches' %}" class="btn btn-outline-secondary btn-sm w-100 mt-2">
+                            <i class="fas fa-times me-1"></i>Clear
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Matches List -->
+        <div class="col-md-9">
+            {% if matches %}
+            {% for match in matches %}
+            <div class="card match-card mb-3 {% if match.overall_score >= 80 %}high-match{% elif match.overall_score >= 60 %}medium-match{% else %}low-match{% endif %}">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h5 class="card-title mb-1">
+                                        <a href="{{ match.job.get_absolute_url }}" class="text-decoration-none">
+                                            {{ match.job.title }}
+                                        </a>
+                                    </h5>
+                                    <p class="text-muted mb-1">
+                                        <i class="fas fa-building me-1"></i>{{ match.job.company.name }}
+                                        <span class="mx-2">•</span>
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ match.job.location }}
+                                        {% if match.job.remote_ok %}
+                                        <span class="badge bg-success ms-2">Remote OK</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="text-end">
+                                    <div class="match-score text-{% if match.overall_score >= 80 %}success{% elif match.overall_score >= 60 %}warning{% else %}danger{% endif %}">
+                                        {{ match.overall_score|floatformat:0 }}%
+                                    </div>
+                                    <small class="text-muted">Match</small>
+                                </div>
+                            </div>
+
+                            <!-- Job Details -->
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
+                                    <small class="text-muted">Type:</small>
+                                    <span class="badge bg-info">{{ match.job.get_job_type_display }}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    {% if match.job.salary_min %}
+                                    <small class="text-muted">Salary:</small>
+                                    <span class="badge bg-success">${{ match.job.salary_min|floatformat:0 }}{% if match.job.salary_max %} - ${{ match.job.salary_max|floatformat:0 }}{% else %}+{% endif %}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Match Breakdown -->
+                            <div class="mb-3">
+                                <small class="text-muted d-block mb-1">Match Breakdown:</small>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <small>Skills: <strong>{{ match.skill_score|floatformat:0 }}%</strong></small>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <small>Experience: <strong>{{ match.experience_score|floatformat:0 }}%</strong></small>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <small>Location: <strong>{{ match.location_score|floatformat:0 }}%</strong></small>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <small>Education: <strong>{{ match.education_score|floatformat:0 }}%</strong></small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Matched Skills -->
+                            {% if match.matched_skills %}
+                            <div class="mb-2">
+                                <small class="text-muted d-block mb-1">Matched Skills:</small>
+                                {% for skill in match.matched_skills|slice:":5" %}
+                                <span class="badge bg-success skill-badge">{{ skill }}</span>
+                                {% endfor %}
+                                {% if match.matched_skills|length > 5 %}
+                                <span class="badge bg-light text-dark skill-badge">+{{ match.matched_skills|length|add:"-5" }} more</span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            <!-- Missing Skills -->
+                            {% if match.missing_skills %}
+                            <div class="mb-2">
+                                <small class="text-muted d-block mb-1">Skills to Develop:</small>
+                                {% for skill in match.missing_skills|slice:":3" %}
+                                <span class="badge bg-warning skill-badge">{{ skill }}</span>
+                                {% endfor %}
+                                {% if match.missing_skills|length > 3 %}
+                                <span class="badge bg-light text-dark skill-badge">+{{ match.missing_skills|length|add:"-3" }} more</span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            <!-- AI Recommendation -->
+                            {% if match.ai_recommendation %}
+                            <div class="alert alert-info py-2 mb-2">
+                                <small>
+                                    <i class="fas fa-robot me-1"></i>
+                                    <strong>AI Insight:</strong> {{ match.ai_recommendation|truncatewords:20 }}
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <!-- Status and Actions -->
+                            <div class="text-end">
+                                <div class="mb-2">
+                                    <span class="badge bg-{% if match.status == 'pending' %}secondary{% elif match.status == 'viewed' %}info{% elif match.status == 'interested' %}warning{% elif match.status == 'applied' %}success{% else %}danger{% endif %}">
+                                        {{ match.get_status_display }}
+                                    </span>
+                                </div>
+
+                                <div class="btn-group-vertical w-100">
+                                    <a href="{% url 'talent_pool:job_match_detail' match.pk %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>View Details
+                                    </a>
+                                    
+                                    {% if match.status != 'applied' %}
+                                    <a href="{% url 'applications:apply' match.job.pk %}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-paper-plane me-1"></i>Apply Now
+                                    </a>
+                                    {% endif %}
+
+                                    {% if match.status == 'pending' %}
+                                    <form method="post" action="{% url 'talent_pool:update_match_status' match.pk %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="interested">
+                                        <button type="submit" class="btn btn-outline-warning btn-sm w-100">
+                                            <i class="fas fa-heart me-1"></i>Interested
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'talent_pool:update_match_status' match.pk %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="not_interested">
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm w-100">
+                                            <i class="fas fa-times me-1"></i>Not Interested
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+
+                                <small class="text-muted d-block mt-2">
+                                    Matched {{ match.created_at|timesince }} ago
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Job matches pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.min_score %}&min_score={{ request.GET.min_score }}{% endif %}">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.min_score %}&min_score={{ request.GET.min_score }}{% endif %}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                <h4>No Job Matches Found</h4>
+                <p class="text-muted">We haven't found any matching jobs yet. Try updating your preferences or check back later.</p>
+                <a href="{% url 'talent_pool:update_preferences' %}" class="btn btn-primary">
+                    <i class="fas fa-cog me-2"></i>Update Preferences
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-refresh matches every 5 minutes
+setInterval(function() {
+    // Only refresh if user is still on the page
+    if (document.visibilityState === 'visible') {
+        fetch(window.location.href)
+        .then(response => response.text())
+        .then(html => {
+            // Update the matches count in the statistics
+            const parser = new DOMParser();
+            const newDoc = parser.parseFromString(html, 'text/html');
+            const newStats = newDoc.querySelectorAll('.card h4');
+            const currentStats = document.querySelectorAll('.card h4');
+            
+            for (let i = 0; i < Math.min(newStats.length, currentStats.length); i++) {
+                if (newStats[i].textContent !== currentStats[i].textContent) {
+                    currentStats[i].textContent = newStats[i].textContent;
+                    currentStats[i].parentElement.classList.add('animate__animated', 'animate__pulse');
+                }
+            }
+        })
+        .catch(error => console.log('Auto-refresh failed:', error));
+    }
+}, 300000); // 5 minutes
+</script>
+{% endblock %}

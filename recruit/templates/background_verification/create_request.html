@@ -1,0 +1,390 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Background Check Request{% endblock %}
+
+{% block extra_css %}
+<style>
+    .package-card {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .package-card:hover {
+        border-color: #007bff;
+        box-shadow: 0 4px 8px rgba(0,123,255,0.1);
+    }
+    .package-card.selected {
+        border-color: #007bff;
+        background-color: #f8f9ff;
+    }
+    .package-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+    .check-item {
+        padding: 0.25rem 0;
+        border-bottom: 1px solid #f8f9fa;
+    }
+    .check-item:last-child {
+        border-bottom: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'background_verification:dashboard' %}">Verification</a></li>
+                    <li class="breadcrumb-item active">Create Request</li>
+                </ol>
+            </nav>
+            
+            <h1 class="h3 mb-4">Create Background Check Request</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Candidate Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Name:</strong> {{ application.candidate.get_full_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Email:</strong> {{ application.candidate.user.email }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Position:</strong> {{ application.job.title }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Company:</strong> {{ application.job.company.name }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>Application Date:</strong> {{ application.applied_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                
+                <!-- Package Selection -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Select Background Check Package</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for package in packages %}
+                            <div class="col-md-6 mb-3">
+                                <div class="package-card p-3" onclick="selectPackage({{ package.id }})">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="package" value="{{ package.id }}" id="package{{ package.id }}">
+                                        <label class="form-check-label w-100" for="package{{ package.id }}">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="mb-0">{{ package.name }}</h6>
+                                                <span class="package-price">${{ package.estimated_cost }}</span>
+                                            </div>
+                                            <p class="text-muted small mb-2">{{ package.description }}</p>
+                                            <div class="small">
+                                                <strong>Includes:</strong>
+                                                {% for check in package.included_checks %}
+                                                <div class="check-item">
+                                                    <i class="fas fa-check text-success me-1"></i>
+                                                    {{ check|title }}
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="mt-2 small text-muted">
+                                                <i class="fas fa-clock me-1"></i>
+                                                {{ package.estimated_turnaround_days }} business days
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Options -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Additional Options</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.priority.id_for_label }}" class="form-label">Priority Level</label>
+                                    {{ form.priority }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.candidate_country.id_for_label }}" class="form-label">Country</label>
+                                    {{ form.candidate_country }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    {{ form.rush_processing }}
+                                    <label class="form-check-label" for="{{ form.rush_processing.id_for_label }}">
+                                        Rush Processing (+50% fee)
+                                        <small class="text-muted d-block">Results in 24-48 hours</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    {{ form.international_checks }}
+                                    <label class="form-check-label" for="{{ form.international_checks.id_for_label }}">
+                                        International Background Checks
+                                        <small class="text-muted d-block">For candidates with international history</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Candidate Details -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Candidate Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.candidate_email.id_for_label }}" class="form-label">Email Address</label>
+                                    {{ form.candidate_email }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.candidate_phone.id_for_label }}" class="form-label">Phone Number</label>
+                                    {{ form.candidate_phone }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.candidate_date_of_birth.id_for_label }}" class="form-label">Date of Birth</label>
+                                    {{ form.candidate_date_of_birth }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.candidate_ssn_last4.id_for_label }}" class="form-label">SSN (Last 4 digits)</label>
+                                    {{ form.candidate_ssn_last4 }}
+                                    <small class="form-text text-muted">Required for identity verification</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.candidate_address.id_for_label }}" class="form-label">Current Address</label>
+                            {{ form.candidate_address }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.custom_instructions.id_for_label }}" class="form-label">Special Instructions</label>
+                            {{ form.custom_instructions }}
+                            <small class="form-text text-muted">Any special requirements or notes for this background check</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legal Compliance Notice -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Legal Compliance Notice</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h6>Important Legal Requirements:</h6>
+                            <ul class="mb-0">
+                                <li>Candidate consent is required before initiating any background check</li>
+                                <li>All checks will comply with FCRA, GDPR, and local regulations</li>
+                                <li>Results must be used in accordance with equal employment opportunity laws</li>
+                                <li>Adverse action procedures must be followed if employment is denied based on results</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="legalAcknowledgment" required>
+                            <label class="form-check-label" for="legalAcknowledgment">
+                                I acknowledge that I understand the legal requirements and will comply with all applicable laws and regulations.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'background_verification:dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Background Check Request</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Summary Sidebar -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top">
+                <div class="card-header">
+                    <h5 class="mb-0">Request Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div id="summary-content">
+                        <p class="text-muted">Select a package to see the summary</p>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Base Cost:</span>
+                        <span id="base-cost">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2" id="rush-cost-row" style="display: none;">
+                        <span>Rush Processing:</span>
+                        <span id="rush-cost">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2" id="international-cost-row" style="display: none;">
+                        <span>International Checks:</span>
+                        <span id="international-cost">$50.00</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total Estimated Cost:</span>
+                        <span id="total-cost">$0.00</span>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Final cost may vary based on actual checks performed
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let packages = {{ packages|safe }};
+let selectedPackage = null;
+
+function selectPackage(packageId) {
+    // Update UI
+    document.querySelectorAll('.package-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    event.currentTarget.classList.add('selected');
+    
+    // Find package data
+    selectedPackage = packages.find(p => p.id === packageId);
+    
+    if (selectedPackage) {
+        updateSummary();
+    }
+}
+
+function updateSummary() {
+    if (!selectedPackage) return;
+    
+    const summaryContent = document.getElementById('summary-content');
+    const baseCost = document.getElementById('base-cost');
+    const totalCost = document.getElementById('total-cost');
+    const rushCostRow = document.getElementById('rush-cost-row');
+    const rushCost = document.getElementById('rush-cost');
+    const internationalCostRow = document.getElementById('international-cost-row');
+    
+    // Update summary content
+    summaryContent.innerHTML = `
+        <h6>${selectedPackage.name}</h6>
+        <p class="small text-muted">${selectedPackage.description}</p>
+        <div class="small">
+            <strong>Estimated Turnaround:</strong> ${selectedPackage.estimated_turnaround_days} business days
+        </div>
+    `;
+    
+    // Calculate costs
+    let basePrice = parseFloat(selectedPackage.estimated_cost);
+    let total = basePrice;
+    
+    baseCost.textContent = `$${basePrice.toFixed(2)}`;
+    
+    // Check for rush processing
+    const rushProcessing = document.querySelector('input[name="rush_processing"]').checked;
+    if (rushProcessing) {
+        const rushAmount = basePrice * 0.5;
+        rushCost.textContent = `$${rushAmount.toFixed(2)}`;
+        rushCostRow.style.display = 'flex';
+        total += rushAmount;
+    } else {
+        rushCostRow.style.display = 'none';
+    }
+    
+    // Check for international checks
+    const internationalChecks = document.querySelector('input[name="international_checks"]').checked;
+    if (internationalChecks) {
+        internationalCostRow.style.display = 'flex';
+        total += 50;
+    } else {
+        internationalCostRow.style.display = 'none';
+    }
+    
+    totalCost.textContent = `$${total.toFixed(2)}`;
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Rush processing checkbox
+    document.querySelector('input[name="rush_processing"]').addEventListener('change', updateSummary);
+    
+    // International checks checkbox
+    document.querySelector('input[name="international_checks"]').addEventListener('change', updateSummary);
+    
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (!selectedPackage) {
+            e.preventDefault();
+            alert('Please select a background check package.');
+            return false;
+        }
+        
+        const legalAcknowledgment = document.getElementById('legalAcknowledgment');
+        if (!legalAcknowledgment.checked) {
+            e.preventDefault();
+            alert('Please acknowledge the legal compliance requirements.');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}
