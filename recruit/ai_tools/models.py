@@ -69,7 +69,7 @@ class CoverLetter(BaseModel):
     city: str = Field(..., min_length=1, max_length=50)
     state: str = Field(..., min_length=2, max_length=2)
     zip: str = Field(..., min_length=5, max_length=10)
-    email: str = Field(..., regex=r'^[^@]+@[^@]+\.[^@]+$')
+    email: str = Field(..., pattern=r'^[^@]+@[^@]+\.[^@]+$')
     phone: str = Field(..., min_length=10, max_length=20)
     date: str = Field(...)
     hiring_manager_name: str = Field(..., min_length=1, max_length=50)
