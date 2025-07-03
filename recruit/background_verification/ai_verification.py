@@ -9,7 +9,7 @@ import json
 import re
 from datetime import datetime
 import hashlib
-import magic
+# import magic
 
 class DocumentVerificationAI:
     """AI-powered document verification and analysis"""
