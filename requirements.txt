@@ -1,86 +1,60 @@
-# Django and core dependencies
-Django
-django-allauth
-django-crispy-forms
-crispy-bootstrap5
-python-decouple
-dj-database-url
-spacy
+# FastAPI and core dependencies
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
 # Database
-psycopg2-binary
-redis
-django-redis
-pycountry
+sqlalchemy[asyncio]>=2.0.0
+aiosqlite>=0.19.0
+alembic>=1.12.0
+
+# Authentication and Security
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.6
+
+# HTTP and networking
+httpx>=0.25.0
+aiofiles>=23.0.0
+
 # AI and Machine Learning
-libmagic
-openai
-crewai
-langchain
-langchain-openai
-face_recognition
-tiktoken
-numpy
-pandas
-scikit-learn
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+openai>=1.0.0
 
 # Document Processing
-PyPDF2
-python-docx
-Pillow
-pytesseract
-opencv-python
+PyPDF2>=3.0.0
+python-docx>=1.0.0
+Pillow>=10.0.0
 
-# Web scraping and HTTP
-requests
-beautifulsoup4
-selenium
-
-# Task Queue
-celery
-django-celery-beat
-django-celery-results
+# Email
+aiosmtplib>=3.0.0
+jinja2>=3.1.0
 
 # File handling and utilities
-python-magic
-Werkzeug
-python-dateutil
+python-magic>=0.4.0
+python-dateutil>=2.8.0
+python-slugify>=8.0.0
 
-# Email and notifications
-django-ses
+# Background tasks
+celery>=5.3.0
+redis>=5.0.0
+
+# WebSocket support
+websockets>=12.0
 
 # Development and testing
-django-debug-toolbar
-pytest
-pytest-django
-factory-boy
-coverage
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+factory-boy>=3.3.0
 
 # Production
-gunicorn
-whitenoise
-sentry-sdk
+gunicorn>=21.0.0
 
-# API and serialization
-djangorestframework
-django-cors-headers
-# Security
-django-ratelimit
-django-axes
-# Monitoring and logging
-structlog
-django-extensions
-
-# File storage
-boto3
-django-storages
-
-# Image processing
-Pillow
-python-magic
 # Data validation
-marshmallow
-cerberus
+email-validator>=2.0.0
 
 # Utilities
-python-slugify
-pytz
+pytz>=2023.3
