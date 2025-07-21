@@ -210,7 +210,7 @@ docker run -p 8000:8000 hire-quick-api
 
 ## 📄 License
 
-This project is licensed under the GLP License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
