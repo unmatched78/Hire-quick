@@ -1,9 +1,86 @@
-django
-djangorestframework-simplejwt
-djangorestframework
-cloudinary
-psycopg2-binary
-python-dotenv
-django-cors-headers
-weasyprint
+# Django and core dependencies
+Django
 django-allauth
+django-crispy-forms
+crispy-bootstrap5
+python-decouple
+dj-database-url
+spacy
+# Database
+psycopg2-binary
+redis
+django-redis
+pycountry
+# AI and Machine Learning
+libmagic
+openai
+crewai
+langchain
+langchain-openai
+face_recognition
+tiktoken
+numpy
+pandas
+scikit-learn
+
+# Document Processing
+PyPDF2
+python-docx
+Pillow
+pytesseract
+opencv-python
+
+# Web scraping and HTTP
+requests
+beautifulsoup4
+selenium
+
+# Task Queue
+celery
+django-celery-beat
+django-celery-results
+
+# File handling and utilities
+python-magic
+Werkzeug
+python-dateutil
+
+# Email and notifications
+django-ses
+
+# Development and testing
+django-debug-toolbar
+pytest
+pytest-django
+factory-boy
+coverage
+
+# Production
+gunicorn
+whitenoise
+sentry-sdk
+
+# API and serialization
+djangorestframework
+django-cors-headers
+# Security
+django-ratelimit
+django-axes
+# Monitoring and logging
+structlog
+django-extensions
+
+# File storage
+boto3
+django-storages
+
+# Image processing
+Pillow
+python-magic
+# Data validation
+marshmallow
+cerberus
+
+# Utilities
+python-slugify
+pytz
