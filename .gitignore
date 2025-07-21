@@ -6,7 +6,15 @@
 # next.js
 /.next/
 /out/
-
+venv
+.next/cache
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.venv
+/dist
 # production
 /build
 
