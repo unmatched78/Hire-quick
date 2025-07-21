@@ -82,7 +82,7 @@ Hire-quick/
 │   ├── migrate.py             # Database migration script
 │   ├── test_api.py            # API testing suite
 │   └── README.md              # Detailed setup instructions
-├── CONVERSION_SUMMARY.md       # Django to FastAPI conversion details
+├── CONVERSION_SUMMARY.md       # FastAPI features details
 └── README.md                  # This file
 ```
 
@@ -90,7 +90,7 @@ Hire-quick/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/blodline57/Hire-quick.git
+git clone https://github.com/unmatched78/Hire-quick.git
 cd Hire-quick/fastapi_app
 ```
 
