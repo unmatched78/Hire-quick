@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to Hire Quick</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #007bff; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .button { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to Hire Quick!</h1>
+        </div>
+        <div class="content">
+            <h2>Hello {{ name }}!</h2>
+            <p>Welcome to Hire Quick, the modern recruitment platform. We're excited to have you on board!</p>
+            
+            {% if user_type == 'candidate' %}
+            <p>As a candidate, you can:</p>
+            <ul>
+                <li>Search and apply for jobs</li>
+                <li>Get AI-powered job recommendations</li>
+                <li>Track your applications</li>
+                <li>Prepare for interviews with our AI interviewer</li>
+            </ul>
+            {% else %}
+            <p>As a recruiter, you can:</p>
+            <ul>
+                <li>Post and manage job listings</li>
+                <li>Review applications with AI assistance</li>
+                <li>Schedule interviews</li>
+                <li>Access analytics and insights</li>
+            </ul>
+            {% endif %}
+            
+            {% if verification_link %}
+            <p>Please verify your email address to get started:</p>
+            <p><a href="{{ verification_link }}" class="button">Verify Email</a></p>
+            {% endif %}
+            
+            <p>Best regards,<br>The Hire Quick Team</p>
+        </div>
+    </div>
+</body>
+</html>

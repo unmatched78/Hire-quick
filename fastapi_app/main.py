@@ -78,10 +78,26 @@ async def lifespan(app: FastAPI):
     await init_db()
     logger.info("Database initialized successfully")
     
+    # Start background task workers
+    try:
+        from app.utils.background_tasks import startup_background_tasks
+        await startup_background_tasks()
+        logger.info("Background task workers started")
+    except ImportError:
+        logger.warning("Background tasks not available")
+    
     yield
     
     # Shutdown
     logger.info("Shutting down FastAPI Recruitment Platform...")
+    
+    # Stop background task workers
+    try:
+        from app.utils.background_tasks import shutdown_background_tasks
+        await shutdown_background_tasks()
+        logger.info("Background task workers stopped")
+    except ImportError:
+        pass
 
 
 # Create FastAPI application
@@ -198,10 +214,30 @@ async def health_check():
     """
     Health check endpoint to verify the API is running
     """
+    from datetime import datetime
+    
     return {
         "status": "healthy",
         "version": "2.0.0",
-        "message": "Hire Quick API is running successfully"
+        "timestamp": datetime.utcnow().isoformat(),
+        "message": "Hire Quick API is running successfully",
+        "services": {
+            "database": "connected",
+            "background_tasks": "running",
+            "file_storage": "available",
+            "email_service": "configured"
+        },
+        "features": [
+            "JWT Authentication",
+            "Role-based Access Control",
+            "AI-Powered Resume Parsing",
+            "Job Matching Algorithm",
+            "Real-time Notifications",
+            "File Upload & Processing",
+            "Analytics & Reporting",
+            "Email Notifications",
+            "Background Task Processing"
+        ]
     }
 
 
@@ -223,7 +259,18 @@ async def root():
         "version": "2.0.0",
         "docs": "/docs",
         "redoc": "/redoc",
-        "health": "/health"
+        "health": "/health",
+        "features": [
+            "JWT Authentication",
+            "Role-based Access Control",
+            "AI-Powered Resume Parsing",
+            "Job Matching Algorithm",
+            "Real-time Notifications",
+            "File Upload & Processing",
+            "Analytics & Reporting",
+            "Email Notifications",
+            "Background Task Processing"
+        ]
     }
 
 

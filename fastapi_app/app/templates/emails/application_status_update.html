@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Application Status Update</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #6c757d; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .status-accepted { color: #28a745; font-weight: bold; }
+        .status-rejected { color: #dc3545; font-weight: bold; }
+        .status-shortlisted { color: #ffc107; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Application Status Update</h1>
+        </div>
+        <div class="content">
+            <h2>Hello {{ candidate_name }}!</h2>
+            <p>We have an update regarding your application for the <strong>{{ job_title }}</strong> position at <strong>{{ company_name }}</strong>.</p>
+            
+            <p>Your application status has been updated to: <span class="status-{{ status|lower }}">{{ status|title }}</span></p>
+            
+            {% if status == 'shortlisted' %}
+            <p>Congratulations! You've been shortlisted for this position. We'll be in touch soon with next steps.</p>
+            {% elif status == 'accepted' %}
+            <p>Congratulations! We're pleased to offer you the position. Our HR team will contact you with details.</p>
+            {% elif status == 'rejected' %}
+            <p>Thank you for your interest in this position. While we won't be moving forward with your application at this time, we encourage you to apply for other opportunities that match your skills.</p>
+            {% endif %}
+            
+            {% if notes %}
+            <p><strong>Additional Notes:</strong></p>
+            <p>{{ notes }}</p>
+            {% endif %}
+            
+            <p>Best regards,<br>{{ company_name }} Recruitment Team</p>
+        </div>
+    </div>
+</body>
+</html>
