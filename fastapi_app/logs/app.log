@@ -1,0 +1,539 @@
+2025-07-21 16:41:19,372 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:41:19,650 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:41:19,650 - main - INFO - Database initialized successfully
+2025-07-21 16:43:49,662 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:43:50,487 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:43:50,517 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:43:50,517 - main - INFO - Database initialized successfully
+2025-07-21 16:43:53,694 - app.core.database - ERROR - Database session error: 1 validation error for UserResponse
+updated_at
+  Error extracting attribute: MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s) [type=get_attribute_error, input_value=<unprintable User object>, input_type=User]
+    For further information visit https://errors.pydantic.dev/2.11/v/get_attribute_error
+2025-07-21 16:43:53,694 - main - ERROR - Unhandled exception: 1 validation error for UserResponse
+updated_at
+  Error extracting attribute: MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s) [type=get_attribute_error, input_value=<unprintable User object>, input_type=User]
+    For further information visit https://errors.pydantic.dev/2.11/v/get_attribute_error
+Traceback (most recent call last):
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Hire-quick/fastapi_app/app/api/v1/endpoints/auth.py", line 152, in login
+    user=UserResponse.from_orm(user)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/pydantic/main.py", line 1440, in from_orm
+    return cls.model_validate(obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/pydantic/main.py", line 705, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for UserResponse
+updated_at
+  Error extracting attribute: MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s) [type=get_attribute_error, input_value=<unprintable User object>, input_type=User]
+    For further information visit https://errors.pydantic.dev/2.11/v/get_attribute_error
+2025-07-21 16:44:18,345 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:44:19,150 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:44:19,181 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:44:19,182 - main - INFO - Database initialized successfully
+2025-07-21 16:44:23,793 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:44:24,582 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:44:24,617 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:44:24,617 - main - INFO - Database initialized successfully
+2025-07-21 16:44:29,729 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:44:30,602 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:44:30,633 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:44:30,633 - main - INFO - Database initialized successfully
+2025-07-21 16:44:35,746 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:44:36,709 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:44:36,739 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:44:36,739 - main - INFO - Database initialized successfully
+2025-07-21 16:44:43,254 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:44:44,055 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:44:44,085 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:44:44,085 - main - INFO - Database initialized successfully
+2025-07-21 16:44:47,882 - app.core.database - ERROR - Database session error: User with this email already exists
+2025-07-21 16:44:47,882 - main - ERROR - Unhandled exception: User with this email already exists
+Traceback (most recent call last):
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Hire-quick/fastapi_app/app/api/v1/endpoints/auth.py", line 69, in register
+    raise ConflictException("User with this email already exists")
+app.core.exceptions.ConflictException: User with this email already exists
+2025-07-21 16:44:56,084 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:44:56,891 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:44:56,920 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:44:56,920 - main - INFO - Database initialized successfully
+2025-07-21 16:45:00,830 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:45:01,618 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:45:01,647 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:45:01,647 - main - INFO - Database initialized successfully
+2025-07-21 16:45:05,557 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:45:06,358 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:45:06,389 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:45:06,389 - main - INFO - Database initialized successfully
+2025-07-21 16:45:12,178 - app.core.database - ERROR - Database session error: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+2025-07-21 16:45:12,179 - main - ERROR - Unhandled exception: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+Traceback (most recent call last):
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Hire-quick/fastapi_app/app/api/v1/endpoints/auth.py", line 173, in login
+    "updated_at": user.updated_at,
+                  ^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py", line 566, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py", line 1086, in get
+    value = self._fire_loader_callables(state, key, passive)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py", line 1116, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/loading.py", line 1670, in load_scalar_attributes
+    result = load_on_ident(
+             ^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/loading.py", line 509, in load_on_ident
+    return load_on_pk_identity(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/loading.py", line 694, in load_on_pk_identity
+    session.execute(
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1415, in execute
+    return meth(
+           ^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1637, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1842, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1982, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2354, in _handle_dbapi_exception
+    raise exc_info[1].with_traceback(exc_info[2])
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1963, in _exec_single_context
+    self.dialect.do_execute(
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 943, in do_execute
+    cursor.execute(statement, parameters)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/aiosqlite.py", line 149, in execute
+    self._adapt_connection._handle_exception(error)
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/aiosqlite.py", line 300, in _handle_exception
+    raise error
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/aiosqlite.py", line 126, in execute
+    _cursor = self.await_(self._connection.cursor())
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+2025-07-21 16:45:22,896 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 16:45:23,690 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 16:45:23,724 - app.core.database - INFO - Database tables created successfully
+2025-07-21 16:45:23,725 - main - INFO - Database initialized successfully
+2025-07-21 17:02:44,817 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 17:02:45,610 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 17:02:45,639 - app.core.database - INFO - Database tables created successfully
+2025-07-21 17:02:45,639 - main - INFO - Database initialized successfully
+2025-07-21 17:02:45,651 - main - WARNING - Background tasks not available
+2025-07-21 17:02:52,066 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 17:02:52,853 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 17:02:52,882 - app.core.database - INFO - Database tables created successfully
+2025-07-21 17:02:52,882 - main - INFO - Database initialized successfully
+2025-07-21 17:02:52,888 - main - WARNING - Background tasks not available
+2025-07-21 17:06:04,309 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 17:06:05,076 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 17:06:05,076 - main - INFO - Database initialized successfully
+2025-07-21 17:06:05,083 - main - WARNING - Background tasks not available
+2025-07-21 17:16:17,723 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 17:16:59,369 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 17:16:59,396 - app.core.database - INFO - Database tables created successfully
+2025-07-21 17:16:59,396 - main - INFO - Database initialized successfully
+2025-07-21 17:16:59,396 - app.utils.background_tasks - INFO - Started 3 background workers
+2025-07-21 17:16:59,396 - main - INFO - Background task workers started
+2025-07-21 17:16:59,396 - app.utils.background_tasks - INFO - Background worker worker-0 started
+2025-07-21 17:16:59,397 - app.utils.background_tasks - INFO - Background worker worker-1 started
+2025-07-21 17:16:59,397 - app.utils.background_tasks - INFO - Background worker worker-2 started
+2025-07-21 17:35:45,832 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 17:35:45,832 - main - INFO - Database initialized successfully
+2025-07-21 17:35:45,833 - main - WARNING - Background tasks not available
+2025-07-21 17:35:57,089 - fastapi - WARNING - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-21 17:36:04,977 - main - INFO - Shutting down FastAPI Recruitment Platform...
+2025-07-21 17:37:42,127 - main - INFO - Starting up FastAPI Recruitment Platform...
+2025-07-21 17:37:42,155 - app.core.database - INFO - Database tables created successfully
+2025-07-21 17:37:42,155 - main - INFO - Database initialized successfully
+2025-07-21 17:37:42,155 - app.utils.background_tasks - INFO - Started 3 background workers
+2025-07-21 17:37:42,155 - main - INFO - Background task workers started
+2025-07-21 17:37:42,155 - app.utils.background_tasks - INFO - Background worker worker-0 started
+2025-07-21 17:37:42,155 - app.utils.background_tasks - INFO - Background worker worker-1 started
+2025-07-21 17:37:42,155 - app.utils.background_tasks - INFO - Background worker worker-2 started
+2025-07-21 17:37:42,195 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:42,546 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:42,897 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:43,247 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:43,598 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:43,948 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:44,299 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:44,650 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:45,000 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:45,351 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:45,701 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:46,052 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:46,402 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:46,753 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:47,104 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:47,454 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:47,805 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:48,155 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:48,506 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:48,856 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:49,207 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:49,558 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:49,908 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:50,259 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:50,609 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:50,960 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:51,311 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:51,661 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:52,012 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:52,362 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:52,713 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:53,063 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:53,414 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:53,765 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:54,115 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:54,466 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:54,816 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:55,167 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:55,517 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:55,868 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:56,219 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:56,569 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:56,920 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:57,270 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:57,621 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:57,972 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:58,322 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:58,673 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:59,023 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:59,374 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:37:59,725 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:00,075 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:00,426 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:00,776 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:01,127 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:01,477 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:01,828 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:02,179 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:02,529 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:02,880 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:03,231 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:03,581 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:03,932 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:04,282 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:04,633 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:04,983 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:05,334 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:05,685 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:06,035 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:06,386 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:06,736 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:07,087 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:07,437 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:07,788 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:08,138 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:08,489 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:08,840 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:09,190 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:09,541 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:09,891 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:10,242 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:10,592 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:10,943 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:11,294 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:11,644 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:11,995 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:12,345 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:12,696 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:13,046 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:13,397 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:13,748 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:14,098 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:14,449 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:14,799 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:15,150 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:15,500 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:15,851 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:16,201 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:16,552 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:16,903 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:17,253 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:17,604 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:17,954 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:18,305 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:18,655 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:19,006 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:19,357 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:19,707 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:20,058 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:20,408 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:20,759 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:21,110 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:21,460 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:21,811 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:22,161 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:22,512 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:22,862 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:23,213 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:23,563 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:23,914 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:24,265 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:24,615 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:24,966 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:25,316 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:25,667 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:26,017 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:26,368 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:26,719 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:27,069 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:27,420 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:27,770 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:28,121 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:28,471 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:28,822 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:29,173 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:29,523 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:29,874 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:30,224 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:30,575 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:30,925 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:31,276 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:31,627 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:31,977 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:32,328 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:32,678 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:33,029 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:33,380 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:33,730 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:34,081 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:34,431 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:34,782 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:35,133 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:35,483 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:35,834 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:36,184 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:36,535 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:36,885 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:37,236 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:37,586 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:37,937 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:38,288 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:38,638 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:38,989 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:39,339 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:39,690 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:40,041 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:40,391 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:40,742 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:41,092 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:41,443 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:41,793 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:42,144 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:42,494 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:42,845 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:43,196 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:43,546 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:43,897 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:44,247 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:44,598 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:44,948 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:45,299 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:45,650 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:46,000 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:46,351 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:46,701 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:47,052 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:47,402 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:47,753 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:48,104 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:48,454 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:48,805 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:49,155 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:49,506 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:49,856 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:50,207 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:50,558 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:50,908 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:51,259 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:51,609 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:51,960 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:52,310 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:52,661 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:53,012 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:53,362 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:53,713 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:54,063 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:54,414 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:54,764 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:55,115 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:55,466 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:55,816 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:56,167 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:56,517 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:56,868 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:57,219 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:57,569 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:57,920 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:58,270 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:58,621 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:58,971 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:59,322 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:38:59,673 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:00,023 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:00,374 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:00,724 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:01,075 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:01,425 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:01,776 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:02,127 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:02,477 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:02,828 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:03,178 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:03,529 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:03,879 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:04,230 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:04,581 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:04,931 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:05,282 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:05,632 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:05,983 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:06,333 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:06,684 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:07,035 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:07,385 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:07,736 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:08,086 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:08,437 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:08,787 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:09,138 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:09,489 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:09,839 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:10,190 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:10,540 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:10,891 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:11,242 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:11,592 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:11,943 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:12,293 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:12,644 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:12,994 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:13,345 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:13,696 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:14,046 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:14,397 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:14,747 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:15,098 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:15,449 - watchfiles.main - INFO - 2 changes detected
+2025-07-21 17:39:15,799 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:16,150 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:16,501 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:16,851 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:17,202 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:17,552 - watchfiles.main - INFO - 1 change detected
+2025-07-21 17:39:17,903 - watchfiles.main - INFO - 1 change detected

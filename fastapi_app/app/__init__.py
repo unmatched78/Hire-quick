@@ -1,0 +1,1 @@
+# FastAPI Recruitment Platform Application Package

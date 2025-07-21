@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Application Received</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #28a745; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Application Received</h1>
+        </div>
+        <div class="content">
+            <h2>Hello {{ candidate_name }}!</h2>
+            <p>Thank you for applying to the <strong>{{ job_title }}</strong> position at <strong>{{ company_name }}</strong>.</p>
+            
+            <p><strong>Application Details:</strong></p>
+            <ul>
+                <li>Position: {{ job_title }}</li>
+                <li>Company: {{ company_name }}</li>
+                <li>Applied on: {{ applied_date }}</li>
+                <li>Application ID: #{{ application_id }}</li>
+            </ul>
+            
+            <p>Your application is now under review. We'll keep you updated on the status of your application.</p>
+            
+            <p>Best regards,<br>{{ company_name }} Recruitment Team</p>
+        </div>
+    </div>
+</body>
+</html>

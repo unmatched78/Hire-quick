@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interview Scheduled</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #17a2b8; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .interview-details { background: white; padding: 15px; border-left: 4px solid #17a2b8; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Interview Scheduled</h1>
+        </div>
+        <div class="content">
+            <h2>Hello {{ candidate_name }}!</h2>
+            <p>Great news! We'd like to invite you for an interview for the <strong>{{ job_title }}</strong> position.</p>
+            
+            <div class="interview-details">
+                <h3>Interview Details:</h3>
+                <ul>
+                    <li><strong>Position:</strong> {{ job_title }}</li>
+                    <li><strong>Company:</strong> {{ company_name }}</li>
+                    <li><strong>Date & Time:</strong> {{ interview_date }}</li>
+                    <li><strong>Type:</strong> {{ interview_type }}</li>
+                    {% if interview_location %}
+                    <li><strong>Location:</strong> {{ interview_location }}</li>
+                    {% endif %}
+                    {% if meeting_link %}
+                    <li><strong>Meeting Link:</strong> <a href="{{ meeting_link }}">{{ meeting_link }}</a></li>
+                    {% endif %}
+                    <li><strong>Duration:</strong> {{ duration }} minutes</li>
+                </ul>
+            </div>
+            
+            {% if interview_notes %}
+            <p><strong>Additional Notes:</strong></p>
+            <p>{{ interview_notes }}</p>
+            {% endif %}
+            
+            <p>Please confirm your attendance by replying to this email.</p>
+            
+            <p>Best regards,<br>{{ company_name }} Recruitment Team</p>
+        </div>
+    </div>
+</body>
+</html>
