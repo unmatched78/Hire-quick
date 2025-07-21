@@ -210,14 +210,14 @@ docker run -p 8000:8000 hire-quick-api
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GLP License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
 For support and questions:
-- **Email**: support@hirequick.com
+- **Email**: iradukundavierra4@gmail.com
 - **Documentation**: [API Docs](https://your-domain.com/docs)
-- **Issues**: [GitHub Issues](https://github.com/blodline57/Hire-quick/issues)
+- **Issues**: [GitHub Issues](https://github.com/unmatched78/Hire-quick/issues)
 
 ## 🎯 Roadmap
 
