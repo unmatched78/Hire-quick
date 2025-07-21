@@ -424,3 +424,39 @@ def verify_email_verification_token(token: str) -> Optional[str]:
         return decoded_token.get("sub")
     except JWTError:
         return None
+
+
+async def get_current_user_websocket(token: str, db: AsyncSession) -> Optional[User]:
+    """
+    Get current authenticated user from JWT token for WebSocket connections
+    
+    Args:
+        token: JWT token
+        db: Database session
+        
+    Returns:
+        Optional[User]: User if authenticated
+    """
+    try:
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM]
+        )
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            return None
+            
+        # Check if it's a refresh token
+        token_type = payload.get("type")
+        if token_type == "refresh":
+            return None
+            
+    except JWTError:
+        return None
+    
+    user = await get_user_by_id(db, int(user_id))
+    if user is None or not user.is_active:
+        return None
+    
+    return user

@@ -5,7 +5,7 @@ Main API router that includes all endpoint routers.
 """
 
 from fastapi import APIRouter
-from .endpoints import auth, users, jobs, applications, companies, analytics, ai, files
+from .endpoints import auth, users, jobs, applications, companies, analytics, ai, files, websocket, ai_enhanced
 
 api_router = APIRouter()
 
@@ -56,4 +56,16 @@ api_router.include_router(
     files.router,
     prefix="/files",
     tags=["File Management"]
+)
+
+api_router.include_router(
+    websocket.router,
+    prefix="/websocket",
+    tags=["Real-time Communication"]
+)
+
+api_router.include_router(
+    ai_enhanced.router,
+    prefix="/ai-enhanced",
+    tags=["Advanced AI Features"]
 )
